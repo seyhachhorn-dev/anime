@@ -12,11 +12,32 @@ $allShows = $shows->fetchAll(PDO::FETCH_OBJ);
 //treding shows
 
 $trendingShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
- COUNT(views.show_id) as view_count FROM shows JOIN views ON shows.id = views.show_id GROUP BY(shows.id)");
+ COUNT(views.show_id) as view_count FROM shows JOIN views ON shows.id = views.show_id GROUP BY(shows.id) ORDER BY views.show_id ASC ");
 
 $trendingShows->execute();
 
 $allTrendingShows = $trendingShows->fetchAll(PDO::FETCH_OBJ);
+
+
+
+// adventure shows
+
+$adventureShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
+ COUNT(views.show_id) as view_count FROM shows LEFT JOIN views ON shows.id = views.show_id Where shows.genre LIKE '%Adventure%' GROUP BY(shows.id)  ORDER BY views.show_id DESC ");
+
+$adventureShows->execute();
+
+$alladventureShows = $adventureShows->fetchAll(PDO::FETCH_OBJ);
+
+
+// recently shows
+
+$recentlyShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
+ shows.created_at as created_at ,COUNT(views.show_id) as view_count FROM shows LEFT JOIN views ON shows.id = views.show_id GROUP BY(shows.id)  ORDER BY shows.created_at DESC ");
+
+$recentlyShows->execute();
+
+$allRecentlyShows = $recentlyShows->fetchAll(PDO::FETCH_OBJ);
 
 
 
@@ -29,7 +50,7 @@ $allTrendingShows = $trendingShows->fetchAll(PDO::FETCH_OBJ);
     <div class="container">
         <div class="hero__slider owl-carousel">
             <?php foreach ($allShows as $show) : ?>
-                <div class="hero__items set-bg" data-setbg="img/live/<?php echo $show->image;  ?>">
+                <div class="hero__items set-bg" data-setbg="img/<?php echo $show->image;  ?>">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="hero__text">
@@ -70,7 +91,7 @@ $allTrendingShows = $trendingShows->fetchAll(PDO::FETCH_OBJ);
                         <?php foreach ($allTrendingShows as $trShow) : ?>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/trending/trend-2.jpg">
+                                    <div class="product__item__pic set-bg" data-setbg="img/<?php echo $trShow->image ?>">
                                         <div class="ep"><?php echo $trShow->num_avaliable ?> / <?php echo $trShow->num_total ?></div>
                                         <!-- <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
                                         <div class="view"><i class="fa fa-eye"></i> <?php echo $trShow->view_count ?></div>
@@ -101,102 +122,26 @@ $allTrendingShows = $trendingShows->fetchAll(PDO::FETCH_OBJ);
                             </div>
                         </div>
                         <div class="row">
+                            <?php foreach($alladventureShows as $adventureShow) : ?>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-1.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                    <div class="product__item__pic set-bg" data-setbg="img/<?php echo $adventureShow->image ?>">
+                                        <div class="ep"><?php echo $adventureShow->num_avaliable ?> / <?php echo $adventureShow->num_total ?></div>
+                                        <!-- <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
+                                        <div class="view"><i class="fa fa-eye"></i> <?php echo $adventureShow->view_count ?></div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li><?php echo $adventureShow->genre ?></li>
+                                            <li><?php echo $adventureShow->type ?></li>
                                         </ul>
-                                        <h5><a href="#">Sen to Chihiro no Kamikakushi</a></h5>
+                                        <h5><a href="#"><?php echo $adventureShow->title ?></a></h5>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-2.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Kizumonogatari III: Reiket su-hen</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-3.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Shirogane Tamashii hen Kouhan sen</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-4.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Rurouni Kenshin: Meiji Kenkaku Romantan</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-5.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Mushishi Zoku Shou 2nd Season</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/popular/popular-6.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Monogatari Series: Second Season</a></h5>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php endforeach; ?>
+
+
                         </div>
                     </div>
                     <div class="recent__product">
@@ -213,103 +158,26 @@ $allTrendingShows = $trendingShows->fetchAll(PDO::FETCH_OBJ);
                             </div>
                         </div>
                         <div class="row">
+                            <?php foreach($allRecentlyShows as $recentlyShows) : ?>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/recent/recent-1.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                    <div class="product__item__pic set-bg" data-setbg="img/<?php echo $recentlyShows->image ?>">
+                                        <div class="ep"><?php echo $recentlyShows->num_avaliable ?> / <?php echo $recentlyShows->num_total ?></div>
+                                        <!-- <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
+                                        <div class="view"><i class="fa fa-eye"></i> <?php echo $recentlyShows->view_count ?></div>
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
+                                            <li><?php echo $recentlyShows->genre ?></li>
+                                            <li><?php echo $recentlyShows->type ?></li>
                                         </ul>
-                                        <h5><a href="#">Great Teacher Onizuka</a></h5>
+                                        <h5><a href="#"><?php echo $recentlyShows->title ?></a></h5>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/recent/recent-2.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Fate/stay night Movie: Heaven's Feel - II. Lost</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/recent/recent-3.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Mushishi Zoku Shou: Suzu no Shizuku</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/recent/recent-4.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Fate/Zero 2nd Season</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/recent/recent-5.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">Kizumonogatari II: Nekket su-hen</a></h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/recent/recent-6.jpg">
-                                        <div class="ep">18 / 18</div>
-                                        <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                    </div>
-                                    <div class="product__item__text">
-                                        <ul>
-                                            <li>Active</li>
-                                            <li>Movie</li>
-                                        </ul>
-                                        <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                                    </div>
-                                </div>
-                            </div>
+                          <?php endforeach; ?>
                         </div>
+
                         <div class="live__product">
                             <div class="row">
                                 <div class="col-lg-8 col-md-8 col-sm-8">
