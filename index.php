@@ -40,6 +40,16 @@ $recentlyShows->execute();
 $allRecentlyShows = $recentlyShows->fetchAll(PDO::FETCH_OBJ);
 
 
+//live action shows
+
+$actionShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
+ COUNT(views.show_id) as view_count FROM shows LEFT JOIN views ON shows.id = views.show_id Where shows.genre LIKE '%Action%' GROUP BY(shows.id)  ORDER BY views.show_id DESC ");
+
+$actionShows->execute();
+
+$allActionShows = $actionShows->fetchAll(PDO::FETCH_OBJ);
+
+
 
 
 
@@ -135,7 +145,7 @@ $allRecentlyShows = $recentlyShows->fetchAll(PDO::FETCH_OBJ);
                                             <li><?php echo $adventureShow->genre ?></li>
                                             <li><?php echo $adventureShow->type ?></li>
                                         </ul>
-                                        <h5><a href="#"><?php echo $adventureShow->title ?></a></h5>
+                                        <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $adventureShow->id?>"><?php echo $adventureShow->title ?></a></h5>
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +181,7 @@ $allRecentlyShows = $recentlyShows->fetchAll(PDO::FETCH_OBJ);
                                             <li><?php echo $recentlyShows->genre ?></li>
                                             <li><?php echo $recentlyShows->type ?></li>
                                         </ul>
-                                        <h5><a href="#"><?php echo $recentlyShows->title ?></a></h5>
+                                        <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $recentlyShows->id?>"><?php echo $recentlyShows->title ?></a></h5>
                                     </div>
                                 </div>
                             </div>
@@ -192,102 +202,25 @@ $allRecentlyShows = $recentlyShows->fetchAll(PDO::FETCH_OBJ);
                                 </div>
                             </div>
                             <div class="row">
+                                <?php foreach($allActionShows as $actionShows) : ?>
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="img/live/live-1.jpg">
-                                            <div class="ep">18 / 18</div>
-                                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                        <div class="product__item__pic set-bg" data-setbg="img/<?php echo $actionShows->image ?>">
+                                            <div class="ep"><?php echo $actionShows->num_avaliable ?> / <?php echo $actionShows->num_total ?></div>
+                                            <!-- <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
+                                            <div class="view"><i class="fa fa-eye"></i> <?php echo $actionShows->view_count?></div>
                                         </div>
                                         <div class="product__item__text">
                                             <ul>
-                                                <li>Active</li>
-                                                <li>Movie</li>
+                                                <li><?php echo $actionShows->genre ?></li>
+                                                <li><?php echo $actionShows->type ?></li>
                                             </ul>
-                                            <h5><a href="#">Shouwa Genroku Rakugo Shinjuu</a></h5>
+                                            <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $actionShows->id?>"><?php echo $actionShows->title ?></a></h5>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="img/live/live-2.jpg">
-                                            <div class="ep">18 / 18</div>
-                                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                        </div>
-                                        <div class="product__item__text">
-                                            <ul>
-                                                <li>Active</li>
-                                                <li>Movie</li>
-                                            </ul>
-                                            <h5><a href="#">Mushishi Zoku Shou 2nd Season</a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="img/live/live-3.jpg">
-                                            <div class="ep">18 / 18</div>
-                                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                        </div>
-                                        <div class="product__item__text">
-                                            <ul>
-                                                <li>Active</li>
-                                                <li>Movie</li>
-                                            </ul>
-                                            <h5><a href="#">Mushishi Zoku Shou: Suzu no Shizuku</a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="img/live/live-4.jpg">
-                                            <div class="ep">18 / 18</div>
-                                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                        </div>
-                                        <div class="product__item__text">
-                                            <ul>
-                                                <li>Active</li>
-                                                <li>Movie</li>
-                                            </ul>
-                                            <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="img/live/live-5.jpg">
-                                            <div class="ep">18 / 18</div>
-                                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                        </div>
-                                        <div class="product__item__text">
-                                            <ul>
-                                                <li>Active</li>
-                                                <li>Movie</li>
-                                            </ul>
-                                            <h5><a href="#">Fate/stay night Movie: Heaven's Feel - II. Lost</a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="img/live/live-6.jpg">
-                                            <div class="ep">18 / 18</div>
-                                            <div class="comment"><i class="fa fa-comments"></i> 11</div>
-                                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                                        </div>
-                                        <div class="product__item__text">
-                                            <ul>
-                                                <li>Active</li>
-                                                <li>Movie</li>
-                                            </ul>
-                                            <h5><a href="#">Kizumonogatari II: Nekketsu-hen</a></h5>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php endforeach; ?>
+
                             </div>
                         </div>
                     </div>
