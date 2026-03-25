@@ -1,14 +1,10 @@
 <?php require "../includes/header.php"; ?>
-<?php require "../config/config.php"; ?>
 
 
 
 <!-- login backed -->
 <?php
-
-if(isset($_SESSION['username'])){
-    header("location: ".APPURL."");
-}
+requireGuest();
 
 
 if(isset($_POST['submit'])){
@@ -20,34 +16,12 @@ if(isset($_POST['submit'])){
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        // 1. SECURITY FIX: Use prepare() instead of query()
-        $login = $conn->prepare("SELECT * FROM users WHERE email = :email");
-        
-        // 2. Bind the data securely
-        $login->execute([':email' => $email]);
-
-        // 3. Fetch the data
-        $fetch = $login->fetch(PDO::FETCH_ASSOC);
-
-        // 4. check row count
-        if($login->rowCount() > 0){
-
-            // 5. Verify Password
-            if(password_verify($password, $fetch['password'])){
-
-                // 6. START SESSION properly
-                // (Make sure session_start(); is at the very top of your file or in header.php)
-
-                $_SESSION['username'] = $fetch['username'];
-                $_SESSION['email'] = $fetch['email'];
-
-                header("location: ".APPURL."");
-
-
-            } else {
-                echo "<script>alert('Email or password is wrong!');</script>";
-            }
-
+        $user = loginUser($email, $password);
+        if ($user) {
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['email'] = $user['email'];
+            header("location: " . APPURL . "");
+            exit();
         } else {
             echo "<script>alert('Email or password is wrong!');</script>";
         }

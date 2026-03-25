@@ -1,55 +1,14 @@
 <?php require "includes/header.php"; ?>
-<?php require "config/config.php"; ?>
 
 <?php
+$allShows = getHeroShows(3);
+$allTrendingShows = getTrendingShows();
+$alladventureShows = getShowsByGenre('Adventure');
+$allRecentlyShows = getRecentlyAddedShows();
+$allActionShows = getShowsByGenre('Action');
+$allForYouShows = getForYouShows(3);
 
-
-$shows = $conn->prepare("SELECT * from shows LIMIT 3");
-$shows->execute();
-
-$allShows = $shows->fetchAll(PDO::FETCH_OBJ);
-
-//treding shows
-
-$trendingShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
- COUNT(views.show_id) as view_count FROM shows JOIN views ON shows.id = views.show_id GROUP BY(shows.id) ORDER BY views.show_id ASC ");
-
-$trendingShows->execute();
-
-$allTrendingShows = $trendingShows->fetchAll(PDO::FETCH_OBJ);
-
-
-
-// adventure shows
-
-$adventureShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
- COUNT(views.show_id) as view_count FROM shows LEFT JOIN views ON shows.id = views.show_id Where shows.genre LIKE '%Adventure%' GROUP BY(shows.id)  ORDER BY views.show_id DESC ");
-
-$adventureShows->execute();
-
-$alladventureShows = $adventureShows->fetchAll(PDO::FETCH_OBJ);
-
-
-// recently shows
-
-$recentlyShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
- shows.created_at as created_at ,COUNT(views.show_id) as view_count FROM shows LEFT JOIN views ON shows.id = views.show_id GROUP BY(shows.id)  ORDER BY shows.created_at DESC ");
-
-$recentlyShows->execute();
-
-$allRecentlyShows = $recentlyShows->fetchAll(PDO::FETCH_OBJ);
-
-
-//live action shows
-
-$actionShows = $conn->prepare("SELECT shows.id as id, shows.title as title, shows.type as type, shows.genre as genre, shows.image as image, shows.num_avaliable as num_avaliable, shows.num_total as num_total,
- COUNT(views.show_id) as view_count FROM shows LEFT JOIN views ON shows.id = views.show_id Where shows.genre LIKE '%Action%' GROUP BY(shows.id)  ORDER BY views.show_id DESC ");
-
-$actionShows->execute();
-
-$allActionShows = $actionShows->fetchAll(PDO::FETCH_OBJ);
-
-
+// var_dump($allForYouShows)
 
 
 
@@ -224,70 +183,38 @@ $allActionShows = $actionShows->fetchAll(PDO::FETCH_OBJ);
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-8">
-                        <div class="product__sidebar">
-                            <div class="product__sidebar__view">
+
+                </div> <!-- /.trending__product -->
+            </div> <!-- /.col-lg-8 -->
+
+            <div class="col-lg-4 col-md-6 col-sm-8">
+                <div class="product__sidebar">
+                    <div class="product__sidebar__view">
+                    </div>
+
+                    <div class="product__sidebar__comment">
+                        <div class="section-title">
+                            <h5>For You</h5>
+                        </div>
+
+                        <?php foreach($allForYouShows as $forYouShows): ?>
+                        <div class="product__sidebar__comment__item">
+                            <div class="product__sidebar__comment__item__pic">
+                                <img style="width: 120px; height: 150px;" src="img/<?php echo $forYouShows->image ?>" alt="">
+                            </div>
+                            <div class="product__sidebar__comment__item__text">
+                                <ul>
+                                    <li style="width: 120px; height: auto;"><?php echo $forYouShows->genre ?></li>
+                                    <li><?php echo $forYouShows->type ?></li>
+                                </ul>
+                                <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $forYouShows->id ?>"><?php echo $forYouShows->title ?></a></h5>
+                                <span><i class="fa fa-eye"></i> <?php echo $forYouShows->view_count ?> Viewes</span>
                             </div>
                         </div>
-                        <div class="product__sidebar__comment">
-                            <div class="section-title">
-                                <h5>For You</h5>
-                            </div>
-                            <div class="product__sidebar__comment__item">
-                                <div class="product__sidebar__comment__item__pic">
-                                    <img src="img/sidebar/comment-1.jpg" alt="">
-                                </div>
-                                <div class="product__sidebar__comment__item__text">
-                                    <ul>
-                                        <li>Active</li>
-                                        <li>Movie</li>
-                                    </ul>
-                                    <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                                    <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                                </div>
-                            </div>
-                            <div class="product__sidebar__comment__item">
-                                <div class="product__sidebar__comment__item__pic">
-                                    <img src="img/sidebar/comment-2.jpg" alt="">
-                                </div>
-                                <div class="product__sidebar__comment__item__text">
-                                    <ul>
-                                        <li>Active</li>
-                                        <li>Movie</li>
-                                    </ul>
-                                    <h5><a href="#">Shirogane Tamashii hen Kouhan sen</a></h5>
-                                    <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                                </div>
-                            </div>
-                            <div class="product__sidebar__comment__item">
-                                <div class="product__sidebar__comment__item__pic">
-                                    <img src="img/sidebar/comment-3.jpg" alt="">
-                                </div>
-                                <div class="product__sidebar__comment__item__text">
-                                    <ul>
-                                        <li>Active</li>
-                                        <li>Movie</li>
-                                    </ul>
-                                    <h5><a href="#">Kizumonogatari III: Reiket su-hen</a></h5>
-                                    <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                                </div>
-                            </div>
-                            <div class="product__sidebar__comment__item">
-                                <div class="product__sidebar__comment__item__pic">
-                                    <img src="img/sidebar/comment-4.jpg" alt="">
-                                </div>
-                                <div class="product__sidebar__comment__item__text">
-                                    <ul>
-                                        <li>Active</li>
-                                        <li>Movie</li>
-                                    </ul>
-                                    <h5><a href="#">Monogatari Series: Second Season</a></h5>
-                                    <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                                </div>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 </section>

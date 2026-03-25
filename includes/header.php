@@ -1,10 +1,5 @@
 <?php
-
-session_start();
-
-define("APPURL", "http://localhost/anime-main")
-
-
+require_once __DIR__ . "/../init/init.php";
 ?>
 
 <!DOCTYPE html>

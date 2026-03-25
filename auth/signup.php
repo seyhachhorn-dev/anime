@@ -1,14 +1,10 @@
 <?php require "../includes/header.php"; ?>
-<?php require "../config/config.php"; ?>
 
 
 <!-- login backend -->
 
-<?php 
-
-if(isset($_SESSION['username'])){
-    header("location: ".APPURL."");
-}
+<?php
+requireGuest();
 
 
 if(isset($_POST['submit'])){
@@ -18,18 +14,15 @@ if(isset($_POST['submit'])){
 
         $email = $_POST['email'];
         $username = $_POST['username'];
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-        $insert = $conn -> prepare("INSERT INTO users (email, username, password) 
-        VALUES (:email, :username, :password)");
+        $created = createUser($email, $username, $passwordHash);
+        if ($created) {
+            header("location: login.php");
+            exit();
+        }
 
-        $insert->execute([
-            ":email" => $email,
-            ":username" => $username,
-            ":password" => $password    
-        ]);
-
-        header("location: login.php");
+        echo "<script>alert('Could not create user. Please try again.');</script>";
     }
 }
 
