@@ -17,4 +17,6 @@ require_once __DIR__ . '/func/auth.func.init.php';
 require_once __DIR__ . '/func/helpers.func.init.php';
 require_once __DIR__ . '/func/user.func.init.php';
 require_once __DIR__ . '/func/shows.func.init.php';
+require_once __DIR__ . '/func/category.func.init.php';
+
 

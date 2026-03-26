@@ -1,5 +1,10 @@
 <?php
 require_once __DIR__ . "/../init/init.php";
+
+
+
+$allGenresCategories = getAllGenresCategories();
+
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +46,7 @@ require_once __DIR__ . "/../init/init.php";
             <div class="row">
                 <div class="col-lg-2">
                     <div class="header__logo">
-                        <a href="./index.html">
+                        <a href="<?php echo APPURL; ?>">
                             <img src="img/logo.png" alt="">
                         </a>
                     </div>
@@ -50,12 +55,13 @@ require_once __DIR__ . "/../init/init.php";
                     <div class="header__nav">
                         <nav class="header__menu mobile-menu">
                             <ul>
-                                <li><a href="./index.html">Homepage</a></li>
-                                <li><a href="./categories.html">Categories <span class="arrow_carrot-down"></span></a>
+                                <li><a href="<?php echo APPURL; ?>">Homepage</a></li>
+                                <li><a href="#">Categories <span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
-                                        <li><a href="./categories.html">Magic</a></li>
-                                        <li><a href="./categories.html">Adventure</a></li>
-                                        <li><a href="./categories.html">Action</a></li>
+                                        <?php foreach($allGenresCategories as $genresCategory) : ?>
+                                        <li><a href="<?php echo APPURL; ?>/categories.php?name=<?php echo $genresCategory->name ?>"><?php echo $genresCategory->name ?></a></li>
+                                        <?php endforeach; ?>
+                                    
                                     </ul>
                                 </li>
                                 <?php if (isset($_SESSION['username'])) : ?>

@@ -161,3 +161,19 @@ function getForYouShows(int $limit = 6): array
 
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
+
+function getShowsByGenres(string $name): array
+{
+    global $conn;
+
+    $query = $conn->prepare("
+        SELECT * 
+        FROM shows 
+        WHERE genre LIKE :genre
+    ");
+
+    $query->bindValue(':genre', '%' . $name . '%', PDO::PARAM_STR);
+    $query->execute();
+
+    return $query->fetchAll(PDO::FETCH_OBJ);
+}
