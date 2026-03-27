@@ -1,39 +1,36 @@
-<?php require "../includes/header.php"; ?>
-<?php require "../config/config.php"; ?>
+<?php
+require_once __DIR__ . "/../init/init.php";
 
+requireGuest();
 
-<!-- login backend -->
-
-<?php 
-
-if(isset($_SESSION['username'])){
-    header("location: ".APPURL."");
-}
-
-
-if(isset($_POST['submit'])){
-    if(empty($_POST['email']) OR empty($_POST['username']) OR empty($_POST['password'])){
-        echo "<script>alert('one or no more input are empty!')</script>";
-    }else{
-
+$error = null;
+if (isset($_POST['submit'])) {
+    if (empty($_POST['email']) || empty($_POST['username']) || empty($_POST['password'])) {
+        $error = "one or no more input are empty!";
+    } else {
         $email = $_POST['email'];
         $username = $_POST['username'];
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-        $insert = $conn -> prepare("INSERT INTO users (email, username, password) 
-        VALUES (:email, :username, :password)");
+        $created = createUser($email, $username, $passwordHash);
+        if ($created) {
+            header("location: login.php");
+            exit();
+        }
 
-        $insert->execute([
-            ":email" => $email,
-            ":username" => $username,
-            ":password" => $password    
-        ]);
-
-        header("location: login.php");
+        $error = "Could not create user. Please try again.";
     }
 }
 
+require "../includes/header.php";
 ?>
+
+<!-- login backend -->
+<?php if ($error) : ?>
+    <script>
+        alert(<?php echo json_encode($error); ?>);
+    </script>
+<?php endif; ?>
 
 
     <!-- Normal Breadcrumb Begin -->

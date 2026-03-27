@@ -1,59 +1,39 @@
-<?php require "../includes/header.php"; ?>
-<?php require "../config/config.php"; ?>
-
-
-
-<!-- login backed -->
 <?php
+require_once __DIR__ . "/../init/init.php";
 
-if(isset($_SESSION['username'])){
-    header("location: ".APPURL."");
-}
+requireGuest();
 
-
-if(isset($_POST['submit'])){
-
-    if(empty($_POST['email']) OR empty($_POST['password'])){
-        echo "<script>alert('One or more inputs are empty!');</script>";
+$error = null;
+if (isset($_POST['submit'])) {
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+        $error = "One or more inputs are empty!";
     } else {
-
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        // 1. SECURITY FIX: Use prepare() instead of query()
-        $login = $conn->prepare("SELECT * FROM users WHERE email = :email");
-        
-        // 2. Bind the data securely
-        $login->execute([':email' => $email]);
+        $user = loginUser($email, $password);
+        if ($user) {
+            $_SESSION['id'] = (int)$user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['email'] = $user['email'];
 
-        // 3. Fetch the data
-        $fetch = $login->fetch(PDO::FETCH_ASSOC);
-
-        // 4. check row count
-        if($login->rowCount() > 0){
-
-            // 5. Verify Password
-            if(password_verify($password, $fetch['password'])){
-
-                // 6. START SESSION properly
-                // (Make sure session_start(); is at the very top of your file or in header.php)
-
-                $_SESSION['username'] = $fetch['username'];
-                $_SESSION['email'] = $fetch['email'];
-
-                header("location: ".APPURL."");
-
-
-            } else {
-                echo "<script>alert('Email or password is wrong!');</script>";
-            }
-
-        } else {
-            echo "<script>alert('Email or password is wrong!');</script>";
+            header("location: " . APPURL);
+            exit();
         }
+
+        $error = "Email or password is wrong!";
     }
 }
+
+require "../includes/header.php";
 ?>
+
+<!-- login backed -->
+<?php if ($error) : ?>
+    <script>
+        alert(<?php echo json_encode($error); ?>);
+    </script>
+<?php endif; ?>
 
 
 <!-- Normal Breadcrumb Begin -->

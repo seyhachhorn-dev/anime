@@ -1,9 +1,9 @@
-<?php 
+<?php
+require_once __DIR__ . "/../init/init.php";
 
-session_start();
 session_unset();
 session_destroy();
 
-header("location: http://localhost/anime-main")
-
+header("location: " . APPURL);
+exit();
 ?>
