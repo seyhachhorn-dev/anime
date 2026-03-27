@@ -1,33 +1,39 @@
-<?php require "../includes/header.php"; ?>
-
-
-
-<!-- login backed -->
 <?php
+require_once __DIR__ . "/../init/init.php";
+
 requireGuest();
 
-
-if(isset($_POST['submit'])){
-
-    if(empty($_POST['email']) OR empty($_POST['password'])){
-        echo "<script>alert('One or more inputs are empty!');</script>";
+$error = null;
+if (isset($_POST['submit'])) {
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+        $error = "One or more inputs are empty!";
     } else {
-
         $email = $_POST['email'];
         $password = $_POST['password'];
 
         $user = loginUser($email, $password);
         if ($user) {
+            $_SESSION['id'] = (int)$user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
-            header("location: " . APPURL . "");
+
+            header("location: " . APPURL);
             exit();
-        } else {
-            echo "<script>alert('Email or password is wrong!');</script>";
         }
+
+        $error = "Email or password is wrong!";
     }
 }
+
+require "../includes/header.php";
 ?>
+
+<!-- login backed -->
+<?php if ($error) : ?>
+    <script>
+        alert(<?php echo json_encode($error); ?>);
+    </script>
+<?php endif; ?>
 
 
 <!-- Normal Breadcrumb Begin -->

@@ -47,13 +47,17 @@ function createUser(string $email, string $username, string $passwordHash): bool
 
 function getCurrentUserId(): ?int
 {
-    return isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+    return $_SESSION['id'] ?? null;
 }
 function getCurrentUser(): ?array
 {
     global $conn;
 
-    $userId = getCurrentUserId();
+    if(!isset($_SESSION['id'])){
+        return null;
+    }
+
+    $userId = $_SESSION['id'];
 
     if (!$userId) {
         return null;

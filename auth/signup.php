@@ -1,17 +1,13 @@
-<?php require "../includes/header.php"; ?>
-
-
-<!-- login backend -->
-
 <?php
+require_once __DIR__ . "/../init/init.php";
+
 requireGuest();
 
-
-if(isset($_POST['submit'])){
-    if(empty($_POST['email']) OR empty($_POST['username']) OR empty($_POST['password'])){
-        echo "<script>alert('one or no more input are empty!')</script>";
-    }else{
-
+$error = null;
+if (isset($_POST['submit'])) {
+    if (empty($_POST['email']) || empty($_POST['username']) || empty($_POST['password'])) {
+        $error = "one or no more input are empty!";
+    } else {
         $email = $_POST['email'];
         $username = $_POST['username'];
         $passwordHash = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -22,11 +18,19 @@ if(isset($_POST['submit'])){
             exit();
         }
 
-        echo "<script>alert('Could not create user. Please try again.');</script>";
+        $error = "Could not create user. Please try again.";
     }
 }
 
+require "../includes/header.php";
 ?>
+
+<!-- login backend -->
+<?php if ($error) : ?>
+    <script>
+        alert(<?php echo json_encode($error); ?>);
+    </script>
+<?php endif; ?>
 
 
     <!-- Normal Breadcrumb Begin -->

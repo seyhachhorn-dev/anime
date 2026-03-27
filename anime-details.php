@@ -5,13 +5,18 @@
 
 if (isset($_GET['id']) && !empty(isset($_GET['id']))) {
 
-    $id = $_GET['id'];
+    $showid = $_GET['id'];
 
-    $showDetail = getShowDetailById($id);
+    $showDetail = getShowDetailById($showid);
 
     //    var_dump($showDetailDetails);
 
+    $showForYou = getForYouShows();
+    $allComments = getAllCommentsByShowId($showid);
+    //    var_dump($allComments);
+$user = getCurrentUser();
 
+echo $user['username'];
 
 }
 
@@ -26,7 +31,7 @@ if (isset($_GET['id']) && !empty(isset($_GET['id']))) {
                 <div class="breadcrumb__links">
                     <a href="<?php echo APPURL; ?>"><i class="fa fa-home"></i> Home</a>
                     <a href="<?php echo APPURL ?>/anime-details.php?id=<?php echo $showDetail->id ?>">Details</a>
-                    <span><?php echo $showDetail->title?></span>
+                    <span><?php echo $showDetail->title ?></span>
                 </div>
             </div>
         </div>
@@ -82,7 +87,7 @@ if (isset($_GET['id']) && !empty(isset($_GET['id']))) {
                         </div>
                     </div>
                 <?php else : ?>
-                    <div  style="color: white; font-size: 1.25rem;">
+                    <div style="color: white; font-size: 1.25rem;">
                         <p>Update Soon!</p>
                     </div>
                 <?php endif; ?>
@@ -92,64 +97,22 @@ if (isset($_GET['id']) && !empty(isset($_GET['id']))) {
             <div class="col-lg-8 col-md-8">
                 <div class="anime__details__review">
                     <div class="section-title">
-                        <h5>Reviews</h5>
+                        <h5>Comments</h5>
                     </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-1.jpg" alt="">
+                    <?php foreach ($allComments as $comments) : ?>
+
+                        <div class="anime__review__item">
+                            <div class="anime__review__item__pic">
+                                <img src="img/review-1.jpg" alt="">
+                            </div>
+                            <div class="anime__review__item__text">
+                                <h6><?php echo $comments->user_name ?> - <span><?php echo $comments->created_at ?></span></h6>
+                                <p><?php echo $comments->comment ?></p>
+                            </div>
                         </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-2.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-3.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-4.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-5.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="img/anime/review-6.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
+
+
                 </div>
                 <div class="anime__details__form">
                     <div class="section-title">
@@ -166,26 +129,13 @@ if (isset($_GET['id']) && !empty(isset($_GET['id']))) {
                     <div class="section-title">
                         <h5>you might like...</h5>
                     </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">Boruto: Naruto next generations</a></h5>
-                    </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-2.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                    </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-3.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">Sword art online alicization war of underworld</a></h5>
-                    </div>
-                    <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-4.jpg">
-                        <div class="ep">18 / ?</div>
-                        <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                        <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
-                    </div>
+                    <?php foreach ($showForYou as $showYou) : ?>
+                        <div class="product__sidebar__view__item set-bg" data-setbg="img/<?php echo $showYou->image ?>">
+                            <div class="ep"><?php echo $showYou->num_avaliable ?> / <?php echo $showYou->num_total ?></div>
+                            <div class="view"><i class="fa fa-eye"></i> <?php echo $showYou->view_count ?></div>
+                            <h5><a href="<?php echo APPURL ?>/anime-details.php?id=<?php echo $showYou->id ?>"><?php echo $showYou->title ?></a></h5>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
