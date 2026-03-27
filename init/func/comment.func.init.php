@@ -9,5 +9,5 @@ function getAllCommentsByShowId($showId)
     $query->bindValue('showId', $showId, PDO::PARAM_INT);
     $query->execute();
     $result = $query->fetchAll(PDO::FETCH_OBJ);
-    return $result ?: null;
+    return $result ?: [];
 }

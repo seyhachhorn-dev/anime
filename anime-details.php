@@ -1,27 +1,37 @@
-<?php require "includes/header.php"; ?>
-
 <?php
+require_once __DIR__ . "/init/init.php";
 
-
-if (isset($_GET['id']) && !empty(isset($_GET['id']))) {
+if (isset($_GET['id']) && !empty($_GET['id'])) {
 
     $showid = $_GET['id'];
 
-    $showDetail = getShowDetailById($showid);
-
-    //    var_dump($showDetailDetails);
-
+    $showDetail = getShowDetailById((int)$showid);
     $showForYou = getForYouShows();
     $allComments = getAllCommentsByShowId($showid);
-    //    var_dump($allComments);
-$user = getCurrentUser();
 
-echo $user['username'];
+    if (isset($_POST['submit'])) {
 
+        if (getCurrentUserId() === null) {
+            header("Location: " . APPURL . "/auth/login.php");
+            exit;
+        }
+
+        $show_id = $_POST['show_id'];
+        $user_id = $_POST['id'];
+
+        if (!empty($show_id) && !empty($user_id)) {
+            insertFollow($show_id, $user_id);
+        }
+   header("Location: " . APPURL . "/anime-details.php?id=" . $showid);
+         exit;
+      
+    }
 }
 
 
 ?>
+<?php require "includes/header.php"; ?>
+
 
 <!-- Breadcrumb Begin -->
 <div class="breadcrumb-option">
@@ -74,15 +84,25 @@ echo $user['username'];
 
                                             <li><span>Duration:</span><?php echo $showDetail->duration ?>/ep</li>
                                             <li><span>Quality:</span><?php echo $showDetail->quality ?></li>
-                                            <li><span>Views:</span><?php echo $showDetail->view_count ?>1</li>
+                                            <li><span>Views:</span><?php echo $showDetail->view_count ?></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div class="anime__details__btn">
-                                <a href="#" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</a>
-                                <a href="anime-watching.html" class="watch-btn"><span>Watch Now</span> <i
-                                        class="fa fa-angle-right"></i></a>
+                                <form method="POST" action="<?php echo APPURL ?>/anime-details.php?id=<?php echo $showid ?>" style="display: inline;">
+                                    <input hidden type="text" name="show_id" value="<?php echo $showid ?>">
+                                    <input hidden type="text" name="id" value="<?php echo getCurrentUserId() ?>">
+                                    <?php if (checkFollowed($showid)): ?>
+                                        <button  href="#" class="follow-btn" disabled><i class="fa fa-heart"></i> Followed</button>
+                                    <?php else: ?>
+                                        <button name="submit" type="submit" href="#" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</button>
+                                    <?php endif; ?>
+                                </form>
+                                
+                                    <a href="anime-watching.html" class="watch-btn"><span>Watch Now</span> <i
+                                            class="fa fa-angle-right"></i></a>
+
                             </div>
                         </div>
                     </div>

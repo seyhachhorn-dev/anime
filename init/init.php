@@ -14,6 +14,8 @@ require_once __DIR__ . '/func/user.func.init.php';
 require_once __DIR__ . '/func/shows.func.init.php';
 require_once __DIR__ . '/func/category.func.init.php';
 require_once __DIR__ . '/func/comment.func.init.php';
+require_once __DIR__ . '/func/follow.func.init.php';
+
 
 
 
