@@ -70,7 +70,7 @@ $allForYouShows = getForYouShows(3);
                                             <li><?php echo $trShow->genre ?></li>
                                             <li><?php echo $trShow->type ?></li>
                                         </ul>
-                                        <h5><a href="#"><?php echo $trShow->title ?></a></h5>
+                                        <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $trShow->id?>"><?php echo $trShow->title ?></a></h5>
                                     </div>
                                 </div>
                             </div>

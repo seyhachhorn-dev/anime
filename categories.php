@@ -90,7 +90,7 @@ $allForYouShows = getForYouShows();
         <?php foreach($allForYouShows as $forYouShows) : ?>
         <div class="product__sidebar__comment__item">
             <div class="product__sidebar__comment__item__pic">
-                <img src="img/<?php echo $forYouShows->image ?>" alt="">
+                <img  style="width: 120px; height: 150px;"  src="img/<?php echo $forYouShows->image ?>" alt="">
             </div>
             <div class="product__sidebar__comment__item__text">
                 <ul>

@@ -177,3 +177,42 @@ function getShowsByGenres(string $name): array
 
     return $query->fetchAll(PDO::FETCH_OBJ);
 }
+
+
+function getShowDetailById(int $showId): ?object
+{
+    global $conn;
+
+    $query = $conn->prepare("
+        SELECT
+            s.id,
+            s.title,
+            s.type,
+            s.genre,
+            s.description,
+            s.studios AS studio,
+            s.date_aired,
+            s.status,
+            s.duration,
+            s.quality,
+            s.image,
+            s.num_avaliable,
+            s.num_total,
+            s.created_at,
+            COUNT(v.show_id) AS view_count
+        FROM shows s
+        LEFT JOIN views v ON s.id = v.show_id
+        WHERE s.id = :id
+        GROUP BY
+            s.id, s.title, s.type, s.genre, s.studios,
+            s.date_aired, s.status, s.duration, s.quality,
+            s.image, s.num_avaliable, s.num_total, s.created_at
+    ");
+
+    $query->bindValue(':id', $showId, PDO::PARAM_INT);
+    $query->execute();
+
+    $result = $query->fetch(PDO::FETCH_OBJ);
+
+    return $result ?: null;
+}
