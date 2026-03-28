@@ -65,7 +65,7 @@ $allForYouShows = getForYouShows();
                             </div>
                             <?php endforeach; ?>
                             <?php else : ?>
-                                <p style="font-size: 1.25rem; color: white;">No shows in this genre just yet</p>
+                                <p style="font-size: 1.25rem; color: white;">No shows in following yet</p>
                         <?php endif;?>
 
                         </div>

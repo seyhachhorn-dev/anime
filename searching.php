@@ -1,11 +1,16 @@
 <?php require "includes/header.php"; ?>
 
 <?php
- $allSearchShows=[];
- $keyword='';
+$allSearchShows = [];
+$keyword = '';
 
 if (isset($_GET['keyword']) && !empty(trim($_GET['keyword']))) {
-    $keyword = trim($_GET['keyword']);
+
+    $keyword = trim($_GET['keyword'] ?? '');
+    if ($keyword === '') {
+        header('Location: ' . APPURL);
+        exit;
+    }
     $allSearchShows = getShowsBySearch($keyword);
 }
 
@@ -63,14 +68,14 @@ $allForYouShows = getForYouShows();
                                                 <li><?php echo $shows->genre ?> </li>
                                                 <li><?php echo $shows->type ?> </li>
                                             </ul>
-                                            <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $shows->show_id ?>"><?php echo $shows->title ?> </a></h5>
+                                            <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $shows->id ?>"><?php echo $shows->title ?> </a></h5>
                                         </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         <?php else : ?>
-                            <p style="font-size: 1.25rem; color: white;">No shows in this genre just yet</p>
-                        <?php endif; ?>
+                            <p style="font-size: 1.25rem; color: white;">No shows for this search </p>
+                                <?php endif; ?>
 
                     </div>
                 </div>
