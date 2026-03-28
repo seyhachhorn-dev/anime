@@ -264,3 +264,45 @@ function insertViewForEachShow(int $show_id, int $user_id)
         return null;
     }
 }
+
+
+
+
+function getFollowedShows(): array
+{
+    global $conn;
+
+    $user_id = getCurrentUserId();
+
+    if ($user_id === null) {
+        return [];
+    }
+
+    $query = $conn->prepare("
+        SELECT 
+            shows.id AS show_id,
+            shows.title AS title,
+            shows.image AS image,
+            shows.type AS type,
+            shows.genre AS genre,
+            shows.num_avaliable AS num_avaliable,
+            shows.num_total AS num_total
+        FROM shows
+        INNER JOIN following 
+            ON shows.id = following.show_id
+        WHERE following.user_id = :userId
+    ");
+
+    $query->bindValue(':userId', $user_id, PDO::PARAM_INT);
+    $query->execute();
+
+    return $query->fetchAll(PDO::FETCH_OBJ);
+}
+
+
+
+
+
+
+
+?>
