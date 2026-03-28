@@ -240,4 +240,27 @@ function getCustomInfoShowById(int $showId): ?object
 
     return $result ?: null;
 }
-?>
+
+
+function insertViewForEachShow(int $show_id, int $user_id)
+{
+    global $conn;
+
+    $query = $conn->prepare("SELECT * FROM views Where show_id = :showId and user_id = :userId");
+
+    $query->bindValue(':showId', $show_id, PDO::PARAM_INT);
+    $query->bindValue(':userId', $user_id, PDO::PARAM_INT);
+
+    $query->execute();
+
+    if ($query->rowCount() === 0) {
+
+        $query = $conn->prepare("INSERT INTO views (show_id,user_id ) VALUES (:showId,:userId)");
+        return $query->execute([
+            ":showId" => $show_id,
+            ":userId" => $user_id
+        ]);
+    } else {
+        return null;
+    }
+}
