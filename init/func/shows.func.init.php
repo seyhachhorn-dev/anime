@@ -301,6 +301,28 @@ function getFollowedShows(): array
 
 
 
+function getShowsBySearch(string $keyword): array
+{
+    global $conn;
+
+    $query = $conn->prepare("
+        SELECT *
+        FROM shows
+        WHERE title LIKE :keyword
+           OR genre LIKE :keyword
+           OR type LIKE :keyword
+           OR studios LIKE :keyword
+    ");
+
+    $query->bindValue(':keyword', '%' . trim($keyword) . '%', PDO::PARAM_STR);
+    $query->execute();
+
+    return $query->fetchAll(PDO::FETCH_OBJ);
+}
+
+
+
+
 
 
 

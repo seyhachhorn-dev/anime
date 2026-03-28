@@ -51,7 +51,7 @@ $allForYouShows = getForYouShows();
                             <?php foreach($AllShowFollowing as $shows) : ?>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
-                                    <div class="product__item__pic set-bg" data-setbg="img/<?php echo $shows-> image ?> ">
+                                    <div class="product__item__pic set-bg" data-setbg="<?php echo APPURL ?>/img/<?php echo $shows-> image ?> ">
                                         <div class="ep"><?php echo $shows-> num_avaliable ?> / <?php echo $shows-> num_total ?> </div>
                                     </div>
                                     <div class="product__item__text">
