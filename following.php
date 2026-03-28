@@ -53,8 +53,6 @@ $allForYouShows = getForYouShows();
                                 <div class="product__item">
                                     <div class="product__item__pic set-bg" data-setbg="img/<?php echo $shows-> image ?> ">
                                         <div class="ep"><?php echo $shows-> num_avaliable ?> / <?php echo $shows-> num_total ?> </div>
-                                        <!-- <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
-                                        <!-- <div class="view"><i class="fa fa-eye"></i> <?php echo $shows-> view_count ?></div> -->
                                     </div>
                                     <div class="product__item__text">
                                         <ul>
