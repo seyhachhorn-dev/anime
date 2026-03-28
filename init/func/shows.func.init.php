@@ -216,3 +216,28 @@ function getShowDetailById(int $showId): ?object
 
     return $result ?: null;
 }
+
+
+function getCustomInfoShowById(int $showId): ?object
+{
+    global $conn;
+
+    $query = $conn->prepare("
+        SELECT
+            s.id,
+            s.title,
+            s.type,
+            s.genre
+        FROM shows s
+        WHERE s.id = :id
+        LIMIT 1
+    ");
+
+    $query->bindValue(':id', $showId, PDO::PARAM_INT);
+    $query->execute();
+
+    $result = $query->fetch(PDO::FETCH_OBJ);
+
+    return $result ?: null;
+}
+?>

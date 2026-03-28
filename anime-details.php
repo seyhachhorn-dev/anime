@@ -26,6 +26,33 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
          exit;
       
     }
+
+    //comment
+
+    if(isset($_POST['insert_comment'])){
+        if(getCurrentUserId() === null){
+
+         header("Location: " . APPURL . "/auth/login.php");
+            exit;
+        }
+
+        if(empty($_POST['comment'])){
+            echo "<script>alert('Your comment is empty')</script>";
+        }else{
+
+            $comment = $_POST['comment'];
+            $show_id = $showid;
+            $user_id = getCurrentUserId();
+            $user_name = $_SESSION['username'];
+
+            insertComment($comment,$show_id,$user_id,$user_name);
+
+               header("Location: " . APPURL . "/anime-details.php?id=" . $showid);
+         exit;
+      
+
+        }
+    }
 }
 
 
@@ -100,7 +127,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                     <?php endif; ?>
                                 </form>
                                 
-                                    <a href="anime-watching.html" class="watch-btn"><span>Watch Now</span> <i
+                                    <a href="<?php echo APPURL ?>/anime-watching.php?id=<?php echo $showid ?>&ep=1" class="watch-btn"><span>Watch Now</span> <i
                                             class="fa fa-angle-right"></i></a>
 
                             </div>
@@ -138,9 +165,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <div class="section-title">
                         <h5>Your Comment</h5>
                     </div>
-                    <form action="#">
-                        <textarea placeholder="Your Comment"></textarea>
-                        <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
+                    <form method="POST" action="<?php echo APPURL ?>/anime-details.php?id=<?php echo $showid ?>">
+                        <textarea name="comment" placeholder="Your Comment"></textarea>
+                        <button name="insert_comment" type="submit"><i class="fa fa-location-arrow"></i>Send</button>
                     </form>
                 </div>
             </div>
