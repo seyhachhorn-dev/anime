@@ -29,11 +29,19 @@
   <!-- Footer Section End -->
 
   <!-- Search model Begin -->
-  <div class="search-model">
+<div class="search-model">
     <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch"><i class="icon_close"></i></div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
+        <div class="search-close-switch">
+            <i class="icon_close"></i>
+        </div>
+
+        <form method="GET" action="<?php echo APPURL; ?>/searching.php" class="search-model-form">
+            <input 
+                name="keyword" 
+                type="text" 
+                id="search-input" 
+                placeholder="Search here....."
+            >
         </form>
     </div>
 </div>

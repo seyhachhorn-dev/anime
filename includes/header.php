@@ -68,7 +68,7 @@ $allGenresCategories = getAllGenresCategories();
                                     <li><a href="#"><?php echo $_SESSION['username']; ?> <span class="arrow_carrot-down"></span></a>
                                         <ul class="dropdown">
                                              <!-- <li><a href="./categories.html">Magic</a></li> -->
-                                            <li><a href="./categories.html">Adventure</a></li>
+                                            <li><a href="./following.php">Following</a></li>
                                             <li><a href="<?php  echo APPURL; ?>/auth/logout.php">Logout</a></li>
                                         </ul>
                                     </li>
