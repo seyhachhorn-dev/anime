@@ -3,6 +3,9 @@
 if (!defined('APPURL')) {
     define("APPURL", "http://localhost/anime-main");
 }
+if (!defined('ADMINURL')) {
+    define("ADMINURL", APPURL . "/admin-panel");
+}
 session_start();
 
 

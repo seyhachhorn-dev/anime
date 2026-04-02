@@ -3,7 +3,9 @@
 <?php
 require_once __DIR__ . "/../../init/init.php";
 
-define("ADMINURL", "http://localhost/anime-main/admin-panel");
+if (!defined("ADMINURL")) {
+    define("ADMINURL", "http://localhost/anime-main/admin-panel");
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +69,7 @@ define("ADMINURL", "http://localhost/anime-main/admin-panel");
               <?php echo $_SESSION['admin_username']; ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="<?php echo APPURL; ?>/auth/logout.php">Logout</a>
+              <a class="dropdown-item" href="<?php echo ADMINURL; ?>/admins/logout-admins.php">Logout</a>
               
           </li>
         <?php endif; ?>

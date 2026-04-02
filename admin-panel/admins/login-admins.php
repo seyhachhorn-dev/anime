@@ -2,6 +2,10 @@
 require_once __DIR__ . "/../../init/init.php";
 require "../layout/header.php";
 
+if(isset($_SESSION['admin_username'])) {
+    header("Location: " . ADMINURL);
+    exit;
+}
 $error = null;
 
 if (isset($_POST['submit'])) {
