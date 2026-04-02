@@ -36,4 +36,18 @@ function getEpisodesByShowId(int $show_id): array
     $query->execute();
 
     return $query->fetchAll(PDO::FETCH_OBJ); 
+    
 }
+
+
+
+function countEpisodes(): int
+{
+    global $conn;
+    $query = $conn->prepare("SELECT COUNT(*) FROM episode");
+    $query->execute();
+    return $query->fetchColumn();
+}
+
+
+?>

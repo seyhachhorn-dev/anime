@@ -16,7 +16,7 @@ if (!defined("ADMINURL")) {
     <title>Admin Panel</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-     <link href="styles/style.css" rel="stylesheet">
+     <link href="<?php echo ADMINURL; ?>/styles/style.css" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
@@ -34,12 +34,12 @@ if (!defined("ADMINURL")) {
         <?php if (isset($_SESSION['admin_username'])) : ?>
         <ul class="navbar-nav side-nav" >
           <li class="nav-item">
-            <a class="nav-link" style="margin-left: 20px;" href="index.html">Home
+            <a class="nav-link" style="margin-left: 20px;" href="<?php echo ADMINURL; ?>/index.php">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="admins/admins.html" style="margin-left: 20px;">Admins</a>
+            <a class="nav-link" href="<?php echo ADMINURL; ?>/admins/admins.php" style="margin-left: 20px;">Admins</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="shows-admins/show-shows.html" style="margin-left: 20px;">Shows</a>

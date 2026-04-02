@@ -322,6 +322,22 @@ function getShowsBySearch(string $keyword): array
 
 
 
+function countShows(): int
+{
+    global $conn;
+    $query = $conn->prepare("SELECT COUNT(*) FROM shows");
+    $query->execute();
+    return $query->fetchColumn();
+}
+
+
+function countGenres(): int
+{
+    global $conn;
+    $query = $conn->prepare("SELECT COUNT(*) FROM genres");
+    $query->execute();
+    return $query->fetchColumn();
+}
 
 
 
