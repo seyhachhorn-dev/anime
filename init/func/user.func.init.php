@@ -12,12 +12,38 @@ function findUserByEmail(string $email): ?array
     return $row ? $row : null;
 }
 
+function findAdminByEmail(string $email): ?array
+{
+    global $conn;
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email AND level = 'admin' LIMIT 1");
+    $stmt->execute([':email' => $email]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row ? $row : null;
+}
+
 /**
  * Returns the user row (assoc array) if password matches, otherwise null.
  */
 function loginUser(string $email, string $password): ?array
 {
     $user = findUserByEmail($email);
+    if (!$user) {
+        return null;
+    }
+
+    if (!password_verify($password, $user['password'])) {
+        return null;
+    }
+
+    return $user;
+}
+
+
+function loginAdmin(string $email, string $password): ?array
+{
+    $user = findAdminByEmail($email);
     if (!$user) {
         return null;
     }
@@ -45,6 +71,21 @@ function createUser(string $email, string $username, string $passwordHash): bool
     ]);
 }
 
+
+function createAdmin(string $email, string $username, string $passwordHash, string $level): bool
+{
+    global $conn;
+
+    $insert = $conn->prepare("INSERT INTO users (email, username, password, level) VALUES (:email, :username, :password, :level)");
+    return $insert->execute([
+        ":email" => $email,
+        ":username" => $username,
+        ":password" => $passwordHash,
+        ":level" => $level,
+    ]);
+}
+
+
 function getCurrentUserId(): ?int
 {
     return $_SESSION['id'] ?? null;
@@ -70,3 +111,22 @@ function getCurrentUser(): ?array
 
     return $user ?: null;
 }
+
+
+function countAdmins(): int
+{
+    global $conn;
+    $query = $conn->prepare("SELECT COUNT(*) FROM users WHERE level = 'admin'");
+    $query->execute();
+    return $query->fetchColumn();
+}
+
+
+function getAllAdmins(): array
+{
+    global $conn;
+    $query = $conn->prepare("SELECT * FROM users WHERE level = 'admin'");
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
