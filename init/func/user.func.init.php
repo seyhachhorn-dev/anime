@@ -12,12 +12,38 @@ function findUserByEmail(string $email): ?array
     return $row ? $row : null;
 }
 
+function findAdminByEmail(string $email): ?array
+{
+    global $conn;
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email AND level = 'admin' LIMIT 1");
+    $stmt->execute([':email' => $email]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row ? $row : null;
+}
+
 /**
  * Returns the user row (assoc array) if password matches, otherwise null.
  */
 function loginUser(string $email, string $password): ?array
 {
     $user = findUserByEmail($email);
+    if (!$user) {
+        return null;
+    }
+
+    if (!password_verify($password, $user['password'])) {
+        return null;
+    }
+
+    return $user;
+}
+
+
+function loginAdmin(string $email, string $password): ?array
+{
+    $user = findAdminByEmail($email);
     if (!$user) {
         return null;
     }
