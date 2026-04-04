@@ -35,8 +35,7 @@ function getEpisodesByShowId(int $show_id): array
     $query->bindValue(':showId', $show_id, PDO::PARAM_INT);
     $query->execute();
 
-    return $query->fetchAll(PDO::FETCH_OBJ); 
-    
+    return $query->fetchAll(PDO::FETCH_OBJ);
 }
 
 
@@ -59,7 +58,8 @@ function getAllEpisodesAdmin(): array
 function createEpisode(array $data): bool
 {
     global $conn;
-
+    
+    $episode_number	= (int) ($data['episode_number'] ?? 1);
     $name = trim((string) ($data['name'] ?? ''));
     $thumbnail = trim((string) ($data['thumbnail'] ?? ''));
     $video = trim((string) ($data['video'] ?? ''));
@@ -69,11 +69,12 @@ function createEpisode(array $data): bool
         return false;
     }
 
-    $sql = 'INSERT INTO episode (name, thumbnail, video, show_id) VALUES (:name, :thumbnail, :video, :show_id)';
+    $sql = 'INSERT INTO episode (episode_number, name, thumbnail, video, show_id) VALUES (:episode_number, :name, :thumbnail, :video, :show_id)';
 
     $stmt = $conn->prepare($sql);
 
     return $stmt->execute([
+        ':episode_number' => $episode_number,
         ':name' => $name,
         ':thumbnail' => $thumbnail,
         ':video' => $video,
@@ -84,14 +85,27 @@ function createEpisode(array $data): bool
 function deleteEpisode($id)
 {
     global $conn;
+
+    // get video filename first
+    $stmt = $conn->prepare("SELECT video FROM episode WHERE id = :id");
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $episode = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($episode && !empty($episode['video'])) {
+        $videoPath = __DIR__ . "/../../admin-panel/episodes-admins/videos/" . $episode['video'];
+
+        if (file_exists($videoPath) && is_file($videoPath)) {
+            unlink($videoPath);
+        }
+    }
+
+    // delete database row
     $stmt = $conn->prepare("DELETE FROM episode WHERE id = :id");
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     return $stmt->execute();
 }
 
-/**
- * Save an uploaded episode thumbnail to the site /img/ folder. Returns the stored filename, or null on skip/failure.
- */
 function saveEpisodeThumbnailUpload(array $file): ?string
 {
     $err = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
@@ -127,9 +141,7 @@ function saveEpisodeThumbnailUpload(array $file): ?string
     return $basename;
 }
 
-/**
- * Save an uploaded episode video to the site /videos/ folder. Returns the stored filename, or null on skip/failure.
- */
+
 function saveEpisodeVideoUpload(array $file): ?string
 {
     $err = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
@@ -164,5 +176,3 @@ function saveEpisodeVideoUpload(array $file): ?string
 
     return $basename;
 }
-
-?>
