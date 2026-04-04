@@ -85,6 +85,16 @@
         seekTime: 25
     });
 
+    const videoElement = document.querySelector('#player');
+    if (videoElement) {
+        const source = videoElement.querySelector('source');
+        if (source && source.src && source.src.endsWith('.m3u8') && window.Hls && Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(source.src);
+            hls.attachMedia(videoElement);
+        }
+    }
+
     /*------------------
         Niceselect
     --------------------*/

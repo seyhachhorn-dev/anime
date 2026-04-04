@@ -20,15 +20,46 @@ if (isset($_GET['id']) && !empty($_GET['ep'])) {
 
     $getCurrentEpisodeInfo = getEpisodeInfoByShowIdAndEpId($showid, $epid);
 
-
-  if ($getCurrentEpisodeInfo && getCurrentUserId() !== null) {
+    if ($getCurrentEpisodeInfo && getCurrentUserId() !== null) {
         insertViewForEachShow($showid, getCurrentUserId());
     }
-    //displays all omments
 
+    // displays all comments
     $allComments = getAllCommentsByShowId($showid);
-    //grab shows info
+    // grab show info
     $showInfo = getCustomInfoShowById($showid);
+}
+
+$videoUrl = '';
+$posterUrl = '';
+$videoType = 'video/mp4';
+if ($getCurrentEpisodeInfo) {
+    $videoFilename = trim((string) ($getCurrentEpisodeInfo->video ?? ''));
+    $posterFilename = trim((string) ($getCurrentEpisodeInfo->thumbnail ?? ''));
+
+    $videoCandidates = [
+        __DIR__ . '/videos/' . $videoFilename => APPURL . '/videos/' . $videoFilename,
+        __DIR__ . '/admin-panel/episodes-admins/videos/' . $videoFilename => APPURL . '/admin-panel/episodes-admins/videos/' . $videoFilename,
+    ];
+
+    foreach ($videoCandidates as $physical => $public) {
+        if (!empty($videoFilename) && file_exists($physical)) {
+            $videoUrl = $public;
+            break;
+        }
+    }
+
+    if (!empty($posterFilename)) {
+        $posterPhysical = __DIR__ . '/img/' . $posterFilename;
+        if (file_exists($posterPhysical)) {
+            $posterUrl = APPURL . '/img/' . $posterFilename;
+        }
+    }
+
+    if ($videoUrl !== '' && strtolower(pathinfo($videoUrl, PATHINFO_EXTENSION)) === 'm3u8') {
+        $videoType = 'application/x-mpegURL';
+    }
+}
 
 
     //comment insert
@@ -55,7 +86,6 @@ if (isset($_GET['id']) && !empty($_GET['ep'])) {
             exit;
         }
     }
-}
 
 
 
@@ -92,11 +122,15 @@ if (isset($_GET['id']) && !empty($_GET['ep'])) {
                 <?php if (count($Allepisodes) > 0): ?>
 
                     <div class="anime__video__player">
-                        <video id="player" playsinline controls data-poster="<?php echo APPURL ?>/videos/<?php echo $getCurrentEpisodeInfo->thumbnail ?>">
-                            <source src="<?php echo APPURL ?>/videos/<?php echo $getCurrentEpisodeInfo->video ?>" type="video/mp4" />
-                            <!-- Captions are optional -->
-                            <track kind="captions" label="English captions" src="#" srclang="en" default />
-                        </video>
+                        <?php if (!empty($videoUrl)): ?>
+                            <video id="player" playsinline controls preload="metadata" <?php echo $posterUrl ? 'poster="' . htmlspecialchars($posterUrl, ENT_QUOTES, 'UTF-8') . '"' : ''; ?>>
+                                <source src="<?php echo htmlspecialchars($videoUrl, ENT_QUOTES, 'UTF-8'); ?>" type="<?php echo htmlspecialchars($videoType, ENT_QUOTES, 'UTF-8'); ?>" />
+                                <!-- Captions are optional -->
+                                <track kind="captions" label="English captions" src="#" srclang="en" default />
+                            </video>
+                        <?php else: ?>
+                            <p style="color:white; font-size: 1.25rem;">Episode file not found or video is unavailable.</p>
+                        <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <p style="color:white; font-size: 1.25rem;">Episode upload soon!</p>

@@ -1,5 +1,29 @@
 <?php
 
+function deleteShow($id)
+{
+    global $conn;
+
+    // 1. Get image filename from DB
+    $stmt = $conn->prepare("SELECT image FROM shows WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+    $show = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($show && !empty($show['image'])) {
+
+        // 2. Build full path to image
+        $imagePath = __DIR__ . "/../../img/" . $show['image'];
+
+        // 3. Delete file if exists
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
+    }
+
+    // 4. Delete DB record
+    $query = $conn->prepare("DELETE FROM shows WHERE id = :id");
+    return $query->execute([':id' => $id]);
+}
 function getHeroShows(int $limit = 3): array
 {
     global $conn;
@@ -18,15 +42,16 @@ function getTrendingShows(int $limit = 0): array
                 shows.id as id,
                 shows.title as title,
                 shows.type as type,
-                shows.genre as genre,
+                genres.name as genre,
                 shows.image as image,
                 shows.num_avaliable as num_avaliable,
                 shows.num_total as num_total,
                 COUNT(views.show_id) as view_count
             FROM shows
             JOIN views ON shows.id = views.show_id
-            GROUP BY (shows.id)
-            ORDER BY views.show_id ASC";
+            LEFT JOIN genres ON shows.genre = genres.id
+            GROUP BY shows.id
+            ORDER BY view_count DESC";
 
     if ($limit > 0) {
         $sql .= " LIMIT :limit";
@@ -330,6 +355,14 @@ function countShows(): int
     return $query->fetchColumn();
 }
 
+/** All rows for admin panel listing (newest first). */
+function getAllShowsAdmin(): array
+{
+    global $conn;
+    $stmt = $conn->query("SELECT * FROM shows ORDER BY id DESC");
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 
 function countGenres(): int
 {
@@ -341,6 +374,90 @@ function countGenres(): int
 
 
 
+/**
+ * Save an uploaded cover image to the site /img/ folder. Returns the stored filename, or null on skip/failure.
+ */
+function saveShowImageUpload(array $file): ?string
+{
+    $err = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+    if ($err === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+    if ($err !== UPLOAD_ERR_OK || empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+        return null;
+    }
 
+    $ext = strtolower(pathinfo((string) ($file['name'] ?? ''), PATHINFO_EXTENSION));
+    $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    if (!in_array($ext, $allowed, true)) {
+        return null;
+    }
+
+    $root = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..');
+    if ($root === false) {
+        return null;
+    }
+
+    $imgDir = $root . DIRECTORY_SEPARATOR . 'img';
+    if (!is_dir($imgDir) && !@mkdir($imgDir, 0755, true)) {
+        return null;
+    }
+
+    $basename = 'show_' . bin2hex(random_bytes(8)) . '.' . $ext;
+    $dest = $imgDir . DIRECTORY_SEPARATOR . $basename;
+    if (!move_uploaded_file($file['tmp_name'], $dest)) {
+        return null;
+    }
+
+    return $basename;
+}
+
+
+function createShow(array $data): bool
+{
+    global $conn;
+
+    $title = trim((string) ($data['title'] ?? ''));
+    $image = trim((string) ($data['image'] ?? ''));
+    $description = trim((string) ($data['description'] ?? ''));
+    $type = trim((string) ($data['type'] ?? ''));
+    $studios = trim((string) ($data['studios'] ?? ''));
+    $dateAired = trim((string) ($data['date_aired'] ?? ''));
+    $status = trim((string) ($data['status'] ?? ''));
+    $genre = trim((string) ($data['genre'] ?? ''));
+    $duration = trim((string) ($data['duration'] ?? ''));
+    $quality = trim((string) ($data['quality'] ?? ''));
+    $numAvailable = (int) ($data['num_avaliable'] ?? 0);
+    $numTotal = (int) ($data['num_total'] ?? 0);
+
+    if ($title === '' || $description === '' || $type === '' || $genre === '') {
+        return false;
+    }
+
+    $sql = 'INSERT INTO shows (
+        title, image, description, type, studios, date_aired, status, genre,
+        duration, quality, num_avaliable, num_total
+    ) VALUES (
+        :title, :image, :description, :type, :studios, :date_aired, :status, :genre,
+        :duration, :quality, :num_avaliable, :num_total
+    )';
+
+    $stmt = $conn->prepare($sql);
+
+    return $stmt->execute([
+        ':title' => $title,
+        ':image' => $image,
+        ':description' => $description,
+        ':type' => $type,
+        ':studios' => $studios,
+        ':date_aired' => $dateAired,
+        ':status' => $status,
+        ':genre' => $genre,
+        ':duration' => $duration,
+        ':quality' => $quality,
+        ':num_avaliable' => $numAvailable,
+        ':num_total' => $numTotal,
+    ]);
+}
 
 ?>

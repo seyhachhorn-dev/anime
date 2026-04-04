@@ -50,6 +50,7 @@
 <!-- Js Plugins -->
 <script src="<?php echo APPURL ?>/js/jquery-3.3.1.min.js"></script>
 <script src="<?php echo APPURL ?>/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="<?php echo APPURL ?>/js/player.js"></script>
 <script src="<?php echo APPURL ?>/js/jquery.nice-select.min.js"></script>
 <script src="<?php echo APPURL ?>/js/mixitup.min.js"></script>
