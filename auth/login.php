@@ -72,7 +72,7 @@ require "../includes/header.php";
                     <!-- <a href="#" class="forget_pass">Forgot Your Password?</a> -->
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-l   g-6">
                 <div class="login__register">
                     <h3>Dont’t Have An Account?</h3>
                     <a href="signup.php" class="primary-btn">Register Now</a>

@@ -29,7 +29,12 @@ if (isset($_POST['submit'])) {
 <!-- login backend -->
 <?php if ($error) : ?>
     <script>
-        alert(<?php echo json_encode($error); ?>);
+    swal({
+        title: "Error!",
+        text: <?php echo json_encode($error); ?>,
+        icon: "error",
+        button: "OK",
+    });
     </script>
 <?php endif; ?>
 

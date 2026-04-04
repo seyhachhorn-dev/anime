@@ -1,13 +1,13 @@
 
-<?php require "layout/header.php" ?>   
-
 <?php
+require_once __DIR__ . "/../init/init.php";
 
 if(!isset($_SESSION['admin_username'])) {
     header("Location: " . ADMINURL . "/admins/login-admins.php");
     exit;
 }
 
+require "layout/header.php";
 
 $countShows = countShows();
 $countEpisodes = countEpisodes();

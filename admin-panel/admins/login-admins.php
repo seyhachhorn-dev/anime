@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__ . "/../../init/init.php";
-require "../layout/header.php";
 
 if(isset($_SESSION['admin_username'])) {
     header("Location: " . ADMINURL);
     exit;
 }
+
+require "../layout/header.php";
+
 $error = null;
 
 if (isset($_POST['submit'])) {
@@ -33,7 +35,12 @@ if (isset($_POST['submit'])) {
 
 <?php if ($error): ?>
 <script>
-    alert(<?php echo json_encode($error); ?>);
+swal({
+    title: "Error!",
+    text: <?php echo json_encode($error); ?>,
+    icon: "error",
+    button: "OK",
+});
 </script>
 <?php endif; ?>
 
