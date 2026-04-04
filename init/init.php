@@ -65,6 +65,8 @@ require_once __DIR__ . '/func/category.func.init.php';
 require_once __DIR__ . '/func/comment.func.init.php';
 require_once __DIR__ . '/func/follow.func.init.php';
 require_once __DIR__ . '/func/episode.func.init.php';
+require_once __DIR__ . '/func/genre.func.init.php';
+
 
 
 
