@@ -204,7 +204,7 @@ $allForYouShows = getForYouShows(3);
                             </div>
                             <div class="product__sidebar__comment__item__text">
                                 <ul>
-                                    <li style="width: 120px; height: auto;"><?php echo $forYouShows->genre ?></li>
+                                    <li style="width: 100px; height: auto; text-align: center;"><?php echo $forYouShows->genre ?></li>
                                     <li><?php echo $forYouShows->type ?></li>
                                 </ul>
                                 <h5><a href="<?php echo APPURL; ?>/anime-details.php?id=<?php echo $forYouShows->id ?>"><?php echo $forYouShows->title ?></a></h5>
