@@ -9,7 +9,19 @@ if (!isset($_SESSION['admin_username'])) {
 
 require "../layout/header.php";
 
-$genres = getAllGenresAdmin();
+$limit = 5;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+
+if ($page < 1) {
+    $page = 1;
+}
+
+$offset = ($page - 1) * $limit;
+
+$totalGenres = countGenres();
+$totalPages = ceil($totalGenres / $limit);
+
+$genres = getGenresPaginated($limit, $offset);
 
 ?>
 
@@ -43,15 +55,71 @@ $genres = getAllGenresAdmin();
                                 <th scope="row"><?php echo (int) ($genre->id ?? 0); ?></th>
                                 <td><?php echo htmlspecialchars($genre->name ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" disabled title="Not implemented yet">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(<?php echo (int) $genre->id; ?>, '<?php echo htmlspecialchars($genre->name ?? '', ENT_QUOTES, 'UTF-8'); ?>')">Delete</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
             </table>
+
+
+            <?php if ($totalPages > 1): ?>
+                <div class="p-3 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination d-flex gap-2 mb-0">
+                            <?php if ($page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $page - 1; ?>">Previous</a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>  ">
+                                    <a class="page-link" href="?page=<?php echo $i; ?>">
+                                        <?php echo $i; ?>
+                                    </a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <?php if ($page < $totalPages): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?php echo $page + 1; ?>">Next</a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
+
+<script>
+    function confirmDelete(id, title) {
+        swal({
+            title: "Are you sure?",
+            text: `Do you really want to delete "${title}"? This action cannot be undone.`,
+            icon: "warning",
+            buttons: ["Cancel", "Delete"],
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                window.location.href = "<?php echo ADMINURL; ?>/genres-admins/delete.genres.php?id=" + id;
+            }
+        });
+    }
+
+    // Check for success message    
+    <?php if (isset($_GET['deleted']) && $_GET['status'] && $_GET['status'] == 'success'): ?>
+        swal({
+            title: "Deleted!",
+            text: "The genre has been successfully deleted.",
+            icon: "success",
+            button: "OK",
+        });
+        window.history.replaceState({}, document.title, window.location.pathname);
+    <?php endif; ?>
+</script>
 
 <?php require "../layout/footer.php"; ?>

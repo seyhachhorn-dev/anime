@@ -59,7 +59,7 @@ $shows = getAllShowsAdmin();
                                 <td><?php echo htmlspecialchars((string) ($show->num_total ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><span class="text-nowrap"><?php echo htmlspecialchars($show->created_at ?? '', ENT_QUOTES, 'UTF-8'); ?></span></td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(<?php echo (int) $show->id; ?>, '<?php echo htmlspecialchars($show->title ?? '', ENT_QUOTES, 'UTF-8'); ?>')">Delete</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -69,5 +69,32 @@ $shows = getAllShowsAdmin();
         </div>
     </div>
 </div>
+
+<script>
+function confirmDelete(id, title) {
+    swal({
+        title: "Are you sure?",
+        text: `Do you really want to delete "${title}"? This action cannot be undone.`,
+        icon: "warning",
+        buttons: ["Cancel", "Delete"],
+        dangerMode: true,
+    }).then((willDelete) => {
+        if (willDelete) {
+            window.location.href = "<?php echo ADMINURL; ?>/shows-admins/delete-shows.php?id=" + id;
+        }
+    });
+}
+
+// Check for success message    
+<?php if (isset($_GET['deleted']) && $_GET['status'] && $_GET['status'] == 'success'): ?>
+swal({
+    title: "Deleted!",
+    text: "The show has been successfully deleted.",
+    icon: "success",
+    button: "OK",
+});
+window.history.replaceState({}, document.title, window.location.pathname);
+<?php endif; ?>
+</script>
 
 <?php require "../layout/footer.php"; ?>

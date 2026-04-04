@@ -1,5 +1,29 @@
 <?php
 
+function deleteShow($id)
+{
+    global $conn;
+
+    // 1. Get image filename from DB
+    $stmt = $conn->prepare("SELECT image FROM shows WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+    $show = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($show && !empty($show['image'])) {
+
+        // 2. Build full path to image
+        $imagePath = __DIR__ . "/../../img/" . $show['image'];
+
+        // 3. Delete file if exists
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
+    }
+
+    // 4. Delete DB record
+    $query = $conn->prepare("DELETE FROM shows WHERE id = :id");
+    return $query->execute([':id' => $id]);
+}
 function getHeroShows(int $limit = 3): array
 {
     global $conn;

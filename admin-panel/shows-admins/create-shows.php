@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_username'])) {
 
 $error = null;
 
-$getAllGenres = getAllGenre();
+$getAllGenres = getAllGenres();
 
 if (isset($_POST['submit'])) {
     $title = trim((string) ($_POST['title'] ?? ''));
