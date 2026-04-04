@@ -86,7 +86,7 @@ $allForYouShows = getForYouShows(3);
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="btn__all">
-                                    <a href="#" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                    <a href="<?php echo APPURL; ?>/categories.php?name=Adventure" class="primary-btn">View All <span class="arrow_right"></span></a>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +156,7 @@ $allForYouShows = getForYouShows(3);
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                     <div class="btn__all">
-                                        <a href="#" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                        <a href="<?php echo APPURL; ?>/categories.php?name=Action" class="primary-btn">View All <span class="arrow_right"></span></a>
                                     </div>
                                 </div>
                             </div>

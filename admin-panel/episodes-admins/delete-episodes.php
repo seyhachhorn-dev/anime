@@ -5,7 +5,7 @@ if(isset($_GET['id'])) {
     $id = (int) $_GET['id'];
     if ($id > 0) {
         deleteEpisode($id);
-        header("Location: " . ADMINURL . "/episodes-admins/show-episodes.php?deleted=1");
+        header("Location: " . ADMINURL . "/episodes-admins/show-episodes.php?deleted&status=success");
         exit;
     }
 }

@@ -19,7 +19,7 @@ $episodes = getAllEpisodesAdmin();
         <p class="admin-page-head__sub">Manage episodes for your shows.</p>
     </div>
     <a href="<?php echo ADMINURL; ?>/episodes-admins/create-episodes.php" class="btn btn-admin-primary">Create episode</a>
-</div>
+</div>  
 
 <div class="admin-card">
     <div class="admin-card__body p-0">
@@ -49,7 +49,7 @@ $episodes = getAllEpisodesAdmin();
                                     <?php if (!empty($episode->thumbnail)): ?>
                                         <img src="<?php echo APPURL; ?>/img/<?php echo htmlspecialchars($episode->thumbnail, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($episode->name ?? '', ENT_QUOTES, 'UTF-8'); ?>" style="width: 8rem; height: 8rem; object-fit: cover;">
                                     <?php else: ?>
-                                        <span class="text-muted">No thumbnail</span>
+                                        <span class="text-muted">No thumbnail</span>    
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($episode->video ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
@@ -82,13 +82,15 @@ function confirmDelete(id, name) {
 }
 
 // Check for success message
-<?php if (isset($_GET['deleted']) && $_GET['deleted'] == '1'): ?>
+<?php if (isset($_GET['deleted']) && isset($_GET['status']) && $_GET['status'] === 'success'): ?>
 swal({
     title: "Deleted!",
     text: "The episode has been successfully deleted.",
     icon: "success",
     button: "OK",
 });
+window.history.replaceState({}, document.title, window.location.pathname);
+
 <?php endif; ?>
 </script>
 

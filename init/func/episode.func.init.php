@@ -151,7 +151,7 @@ function saveEpisodeVideoUpload(array $file): ?string
         return null;
     }
 
-    $videoDir = $root . DIRECTORY_SEPARATOR . 'videos';
+    $videoDir = $root . DIRECTORY_SEPARATOR . 'admin-panel' . DIRECTORY_SEPARATOR . 'episodes-admins' . DIRECTORY_SEPARATOR . 'videos';
     if (!is_dir($videoDir) && !@mkdir($videoDir, 0755, true)) {
         return null;
     }

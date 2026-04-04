@@ -7,6 +7,12 @@ if (!isset($_SESSION['admin_username'])) {
     exit;
 }
 
+// Increase PHP limits for large file uploads
+ini_set('upload_max_filesize', '100M');
+ini_set('post_max_size', '100M');
+ini_set('memory_limit', '256M');
+ini_set('max_execution_time', '300');
+
 $error = null;
 
 $getAllShows = getAllShowsAdmin();
