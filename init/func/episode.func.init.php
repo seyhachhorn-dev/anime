@@ -55,6 +55,25 @@ function getAllEpisodesAdmin(): array
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
 
+function getAllEpisodesPaginated(int $limit, int $offset): array
+{
+    global $conn;
+
+    $stmt = $conn->prepare("
+        SELECT episode.*, shows.title as show_title
+        FROM episode
+        JOIN shows ON episode.show_id = shows.id
+        ORDER BY episode.id DESC
+        LIMIT :limit OFFSET :offset
+    ");
+
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 function createEpisode(array $data): bool
 {
     global $conn;

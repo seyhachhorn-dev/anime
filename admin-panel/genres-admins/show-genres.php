@@ -55,7 +55,7 @@ $genres = getGenresPaginated($limit, $offset);
                                 <th scope="row"><?php echo (int) ($genre->id ?? 0); ?></th>
                                 <td><?php echo htmlspecialchars($genre->name ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(<?php echo (int) $genre->id; ?>, '<?php echo htmlspecialchars($genre->name ?? '', ENT_QUOTES, 'UTF-8'); ?>')">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-danger text-nowrap" onclick="confirmDelete(<?php echo (int) $genre->id; ?>, '<?php echo htmlspecialchars($genre->name ?? '', ENT_QUOTES, 'UTF-8'); ?>')">Delete <i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -115,6 +115,16 @@ $genres = getGenresPaginated($limit, $offset);
         swal({
             title: "Deleted!",
             text: "The genre has been successfully deleted.",
+            icon: "success",
+            button: "OK",
+        });
+        window.history.replaceState({}, document.title, window.location.pathname);
+    <?php endif; ?>
+
+    <?php if (isset($_GET['created']) && $_GET['status'] && $_GET['status'] == 'success'): ?>
+        swal({
+            title: "Created!",
+            text: "The genre has been successfully created.",
             icon: "success",
             button: "OK",
         });

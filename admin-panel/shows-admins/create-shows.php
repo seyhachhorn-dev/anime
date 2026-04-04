@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
             ];
 
             if (createShow($data)) {
-                header("Location: " . ADMINURL . "/shows-admins/show-shows.php");
+                header("Location: " . ADMINURL . "/shows-admins/show-shows.php?created&status=success");
                 exit;
             }
             $error = 'Could not save show. Please try again.';

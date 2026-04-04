@@ -14,7 +14,7 @@ if (isset($_POST['submit'])) {
     if ($name === '') {
         $error = 'Please enter a genre name.';
     } elseif (createGenre($name)) {
-        header("Location: " . ADMINURL . "/genres-admins/show-genres.php");
+        header("Location: " . ADMINURL . "/genres-admins/show-genres.php?created&status=success");
         exit;
     } else {
         $error = 'Could not create genre. It may already exist.';

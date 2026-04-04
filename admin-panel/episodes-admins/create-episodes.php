@@ -20,9 +20,9 @@ $getAllShows = getAllShowsAdmin();
 if (isset($_POST['submit'])) {
     $name = trim((string) ($_POST['name'] ?? ''));
     $showId = (int) ($_POST['show_id'] ?? 0);
-    $episodenumber = (int) ($_POST['episode_number'] ?? 1);
+    $episode_number = (int) ($_POST['episode_number'] ?? 1);
 
-    if ($name === '' || $showId <= 0 || $episodenumber <= 0) {
+    if ($name === '' || $showId <= 0 || $episode_number <= 0) {
         $error = 'Please fill all required fields.';
     } else {
         $thumbnailName = '';
@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
 
         if ($error === null) {
             $data = [
-                'episode_number' => $episodenumber,
+                'episode_number' => $episode_number,
                 'name' => $name,
                 'thumbnail' => $thumbnailName,
                 'video' => $videoName,
@@ -55,7 +55,7 @@ if (isset($_POST['submit'])) {
             ];
 
             if (createEpisode($data)) {
-                header("Location: " . ADMINURL . "/episodes-admins/show-episodes.php");
+                header("Location: " . ADMINURL . "/episodes-admins/show-episodes.php?created&status=success");
                 exit;
             }
             $error = 'Could not save episode. Please try again.';
@@ -90,7 +90,7 @@ require "../layout/header.php";
             </div>
             <div class="form-group">
                 <label class="small text-muted font-weight-bold" for="episode-number">Episode Number</label>
-                <input type="number" name="episodenumber" id="episode-number" class="form-control" placeholder="Episode number" required value="<?php echo htmlspecialchars($_POST['episodenumber'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="number" name="episode_number" id="episode-number" class="form-control" placeholder="Episode number" required value="<?php echo htmlspecialchars($_POST['episode_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="form-group">
                 <label class="small text-muted font-weight-bold" for="episode-thumbnail">Thumbnail</label>

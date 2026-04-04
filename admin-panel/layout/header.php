@@ -27,7 +27,7 @@ if ($adminLoggedIn) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo htmlspecialchars(ADMINURL . '/styles/style.css', ENT_QUOTES, 'UTF-8'); ?>" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -144,7 +144,7 @@ if ($adminLoggedIn) {
                             <line x1="3" y1="18" x2="21" y2="18" />
                         </svg>
                     </button>
-                    <div class="admin-topbar__search-wrap">
+                    <!-- <div class="admin-topbar__search-wrap">
                         <label class="admin-search" for="admin-search-input">
                             <span class="admin-search__icon" aria-hidden="true">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -154,7 +154,7 @@ if ($adminLoggedIn) {
                             </span>
                             <input id="admin-search-input" class="admin-search__input" type="search" placeholder="Search shows, genres, episodes…" autocomplete="off" size="1">
                         </label>
-                    </div>
+                    </div> -->
                     <div class="admin-topbar__actions">
                         <a class="btn btn-admin-primary btn-admin-primary--sm" href="<?php echo ADMINURL; ?>/shows-admins/create-shows.php">+ New show</a>
                         <span class="admin-topbar__avatar" aria-hidden="true"><?php echo htmlspecialchars($adminInitials, ENT_QUOTES, 'UTF-8'); ?></span>

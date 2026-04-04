@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
 
         $created = createAdmin($email, $username, $passwordHash, "admin");
         if ($created) {
-            header("location: admins.php");
+            header("location: admins.php?created&status=success");
             exit();
         }
 
