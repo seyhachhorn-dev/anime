@@ -37,36 +37,17 @@ if (isset($_POST['submit'])) {
 </script>
 <?php endif; ?>
 
-      <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title mt-5">Login</h5>
-              <form method="POST" class="p-auto" action="login-admins.php">
-                  <!-- Email input -->
-                  <div class="form-outline mb-4">
-                    <input type="email" name="email" id="form2Example1" class="form-control" placeholder="Email" />
-                   
-                  </div>
-
-                  
-                  <!-- Password input -->
-                  <div class="form-outline mb-4">
-                    <input type="password" name="password" id="form2Example2" placeholder="Password" class="form-control" />
-                    
-                  </div>
-
-
-
-                  <!-- Submit button -->
-                  <button type="submit" name="submit" class="btn btn-primary  mb-4 text-center">Login</button>
-
-                 
+                <h2 class="h5 font-weight-bold mb-4" style="color: var(--admin-text);">Sign in</h2>
+                <form method="POST" action="login-admins.php">
+                    <div class="form-group">
+                        <label class="small text-muted font-weight-bold" for="login-email">Email</label>
+                        <input type="email" name="email" id="login-email" class="form-control" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="small text-muted font-weight-bold" for="login-password">Password</label>
+                        <input type="password" name="password" id="login-password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button type="submit" name="submit" class="btn btn-primary btn-block py-2 font-weight-bold">Log in</button>
                 </form>
 
-            </div>
-       </div>
-     </div>
-    </div>
-</div>
   <?php require "../layout/footer.php" ?>      

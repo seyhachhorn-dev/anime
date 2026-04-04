@@ -330,6 +330,14 @@ function countShows(): int
     return $query->fetchColumn();
 }
 
+/** All rows for admin panel listing (newest first). */
+function getAllShowsAdmin(): array
+{
+    global $conn;
+    $stmt = $conn->query("SELECT * FROM shows ORDER BY id DESC");
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 
 function countGenres(): int
 {
