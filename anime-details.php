@@ -26,33 +26,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
          exit;
       
     }
-
-    //comment
-
-    if(isset($_POST['insert_comment'])){
-        if(getCurrentUserId() === null){
-
-         header("Location: " . APPURL . "/auth/login.php");
-            exit;
-        }
-
-        if(empty($_POST['comment'])){
-            echo "<script>alert('Your comment is empty')</script>";
-        }else{
-
-            $comment = $_POST['comment'];
-            $show_id = $showid;
-            $user_id = getCurrentUserId();
-            $user_name = $_SESSION['username'];
-
-            insertComment($comment,$show_id,$user_id,$user_name);
-
-               header("Location: " . APPURL . "/anime-details.php?id=" . $showid);
-         exit;
-      
-
-        }
-    }
 }
 
 
@@ -146,28 +119,28 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <div class="section-title">
                         <h5>Comments</h5>
                     </div>
-                    <?php foreach ($allComments as $comments) : ?>
-
-                        <div class="anime__review__item">
-                            <div class="anime__review__item__pic">
-                                <img src="img/review-1.jpg" alt="">
+                    <div id="comments-container">
+                        <?php foreach ($allComments as $comments) : ?>
+                            <div class="anime__review__item">
+                                <div class="anime__review__item__pic">
+                                    <img src="img/review-1.jpg" alt="">
+                                </div>
+                                <div class="anime__review__item__text">
+                                    <h6><?php echo $comments->user_name ?> - <span><?php echo $comments->created_at ?></span></h6>
+                                    <p><?php echo $comments->comment ?></p>
+                                </div>
                             </div>
-                            <div class="anime__review__item__text">
-                                <h6><?php echo $comments->user_name ?> - <span><?php echo $comments->created_at ?></span></h6>
-                                <p><?php echo $comments->comment ?></p>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-
+                        <?php endforeach; ?>
+                    </div>
 
                 </div>
                 <div class="anime__details__form">
                     <div class="section-title">
                         <h5>Your Comment</h5>
                     </div>
-                    <form method="POST" action="<?php echo APPURL ?>/anime-details.php?id=<?php echo $showid ?>">
-                        <textarea name="comment" placeholder="Your Comment"></textarea>
-                        <button name="insert_comment" type="submit"><i class="fa fa-location-arrow"></i>Send</button>
+                    <form id="comment-form" method="POST">
+                        <textarea name="comment" id="comment-input" placeholder="Your Comment"></textarea>
+                        <button type="submit" id="submit-comment"><i class="fa fa-location-arrow"></i>Send</button>
                     </form>
                 </div>
             </div>
@@ -189,5 +162,96 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     </div>
 </section>
 <!-- Anime Section End -->
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle comment form submission
+    var form = document.getElementById('comment-form');
+    var submitBtn = document.getElementById('submit-comment');
+    var commentInput = document.getElementById('comment-input');
+    
+    if (!form) return; // Exit if form not found
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent page reload
+        
+        var commentText = commentInput.value.trim();
+        var showId = <?php echo $showid; ?>;
+        
+        // Validate comment
+        if (commentText === '') {
+            swal({
+                title: "Error!",
+                text: "Comment cannot be empty",
+                icon: "error",
+                button: "OK",
+            });
+            return;
+        }
+        
+        // Disable submit button
+        submitBtn.disabled = true;
+        
+        // Send request using Fetch API (no jQuery needed)
+        fetch('<?php echo APPURL; ?>/add-comment-ajax.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'comment=' + encodeURIComponent(commentText) + '&show_id=' + showId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add new comment to the comments container
+                var newComment = `
+                    <div class="anime__review__item">
+                        <div class="anime__review__item__pic">
+                            <img src="img/review-1.jpg" alt="">
+                        </div>
+                        <div class="anime__review__item__text">
+                            <h6>` + data.comment.user_name + ` - <span>` + data.comment.created_at + `</span></h6>
+                            <p>` + data.comment.comment + `</p>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('comments-container').insertAdjacentHTML('afterbegin', newComment);
+                
+                // Clear textarea
+                commentInput.value = '';
+                
+                // Show success message
+                swal({
+                    title: "Success!",
+                    text: "Comment added successfully",
+                    icon: "success",
+                    button: "OK",
+                });
+            } else {
+                swal({
+                    title: "Error!",
+                    text: data.message,
+                    icon: "error",
+                    button: "OK",
+                });
+            }
+        })
+        .catch(error => {
+            swal({
+                title: "Error!",
+                text: "Failed to add comment",
+                icon: "error",
+                button: "OK",
+            });
+        })
+        .finally(() => {
+            // Re-enable submit button
+            submitBtn.disabled = false;
+        });
+    });
+});
+</script>
 
 <?php require "includes/footer.php"; ?>
