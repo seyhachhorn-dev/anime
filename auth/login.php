@@ -69,7 +69,7 @@ require "../includes/header.php";
                         </div>
                         <button name="submit" type="submit" class="site-btn">Login Now</button>
                     </form>
-                    <a href="#" class="forget_pass">Forgot Your Password?</a>
+                    <!-- <a href="#" class="forget_pass">Forgot Your Password?</a> -->
                 </div>
             </div>
             <div class="col-lg-6">

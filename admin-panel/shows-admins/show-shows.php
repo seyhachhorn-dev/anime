@@ -9,7 +9,20 @@ if (!isset($_SESSION['admin_username'])) {
 
 require "../layout/header.php";
 
-$shows = getAllShowsAdmin();
+$limit = 5;
+$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+
+if ($page < 1) {
+    $page = 1;
+}
+
+$offset = ($page - 1) * $limit;
+
+$totalShows = countShows();
+$totalPages = (int) ceil($totalShows / $limit);
+
+$shows = getAllShowsPaginated($limit, $offset);
+
 
 ?>
 
@@ -59,13 +72,41 @@ $shows = getAllShowsAdmin();
                                 <td><?php echo htmlspecialchars((string) ($show->num_total ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><span class="text-nowrap"><?php echo htmlspecialchars($show->created_at ?? '', ENT_QUOTES, 'UTF-8'); ?></span></td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(<?php echo (int) $show->id; ?>, '<?php echo htmlspecialchars($show->title ?? '', ENT_QUOTES, 'UTF-8'); ?>')">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-danger text-nowrap" onclick="confirmDelete(<?php echo (int) $show->id; ?>, '<?php echo htmlspecialchars($show->title ?? '', ENT_QUOTES, 'UTF-8'); ?>')">Delete <i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
             </table>
+
+            <?php if ($totalPages > 1): ?>
+    <div class="p-3 d-flex justify-content-center">
+        <nav>
+            <ul class="pagination d-flex gap-2 mb-0">
+                <?php if ($page > 1): ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<?php echo $page - 1; ?>">Previous</a>
+                    </li>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $i; ?>">
+                            <?php echo $i; ?>
+                        </a>
+                    </li>
+                <?php endfor; ?>
+
+                <?php if ($page < $totalPages): ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<?php echo $page + 1; ?>">Next</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </div>
+<?php endif; ?>
         </div>
     </div>
 </div>
@@ -90,6 +131,16 @@ function confirmDelete(id, title) {
 swal({
     title: "Deleted!",
     text: "The show has been successfully deleted.",
+    icon: "success",
+    button: "OK",
+});
+window.history.replaceState({}, document.title, window.location.pathname);
+<?php endif; ?>
+
+<?php if (isset($_GET['created']) && $_GET['status'] && $_GET['status'] == 'success'): ?>
+swal({
+    title: "Created!",
+    text: "The show has been successfully created.",
     icon: "success",
     button: "OK",
 });

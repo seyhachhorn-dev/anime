@@ -69,7 +69,6 @@ function getShowsByGenre(string $genreLike, int $limit = 0, string $orderBy = "v
 {
     global $conn;
 
-    // Whitelist allowed order by to avoid SQL injection.
     $allowedOrderBy = [
         "views.show_id DESC",
         "views.show_id ASC",
@@ -362,6 +361,25 @@ function getAllShowsAdmin(): array
     $stmt = $conn->query("SELECT * FROM shows ORDER BY id DESC");
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
+
+function getAllShowsPaginated(int $limit, int $offset): array
+{
+    global $conn;
+
+    $stmt = $conn->prepare("
+        SELECT *
+        FROM shows
+        ORDER BY id DESC
+        LIMIT :limit OFFSET :offset
+    ");
+
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 
 
 function countGenres(): int

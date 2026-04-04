@@ -84,5 +84,17 @@ $admins = getAllAdmins();
 
 
 
+<script>
+<?php if (isset($_GET['created']) && $_GET['status'] && $_GET['status'] == 'success'): ?>
+swal({
+    title: "Created!",
+    text: "The admin has been successfully created.",
+    icon: "success",
+    button: "OK",
+});
+window.history.replaceState({}, document.title, window.location.pathname);
+<?php endif; ?>
+</script>
+
       <?php require "../layout/footer.php" ?>      
 
