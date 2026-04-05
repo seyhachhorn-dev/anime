@@ -97,14 +97,17 @@ $genres = getGenresPaginated($limit, $offset);
 
 <script>
     function confirmDelete(id, title) {
-        swal({
-            title: "Are you sure?",
+        Swal.fire({
+            title: 'Are you sure?',
             text: `Do you really want to delete "${title}"? This action cannot be undone.`,
-            icon: "warning",
-            buttons: ["Cancel", "Delete"],
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
                 window.location.href = "<?php echo ADMINURL; ?>/genres-admins/delete.genres.php?id=" + id;
             }
         });
@@ -112,21 +115,21 @@ $genres = getGenresPaginated($limit, $offset);
 
     // Check for success message    
     <?php if (isset($_GET['deleted']) && $_GET['status'] && $_GET['status'] == 'success'): ?>
-        swal({
-            title: "Deleted!",
-            text: "The genre has been successfully deleted.",
-            icon: "success",
-            button: "OK",
+        Swal.fire({
+            title: 'Deleted!',
+            text: 'The genre has been successfully deleted.',
+            icon: 'success',
+            confirmButtonText: 'OK'
         });
         window.history.replaceState({}, document.title, window.location.pathname);
     <?php endif; ?>
 
     <?php if (isset($_GET['created']) && $_GET['status'] && $_GET['status'] == 'success'): ?>
-        swal({
-            title: "Created!",
-            text: "The genre has been successfully created.",
-            icon: "success",
-            button: "OK",
+        Swal.fire({
+            title: 'Created!',
+            text: 'The genre has been successfully created.',
+            icon: 'success',
+            confirmButtonText: 'OK'
         });
         window.history.replaceState({}, document.title, window.location.pathname);
     <?php endif; ?>

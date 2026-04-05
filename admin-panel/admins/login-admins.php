@@ -9,6 +9,7 @@ if(isset($_SESSION['admin_username'])) {
 require "../layout/header.php";
 
 $error = null;
+$success = false;
 
 if (isset($_POST['submit'])) {
     if (empty($_POST['email']) || empty($_POST['password'])) {
@@ -24,8 +25,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['admin_email'] = $user['email'];
             $_SESSION['admin_username'] = $user['username'];
 
-            header("Location: " . ADMINURL);
-            exit;
+            $success = true;
         } else {
             $error = "Email or password is wrong!";
         }
@@ -40,6 +40,20 @@ Swal.fire({
     title: 'Login Failed',
     text: <?php echo json_encode($error); ?>,
     confirmButtonText: 'OK'
+});
+</script>
+<?php endif; ?>
+
+<?php if ($success): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Login Successful',
+    text: 'Welcome to Admin Panel!',
+    timer: 2000,
+    showConfirmButton: false
+}).then(() => {
+    window.location.href = '<?php echo ADMINURL; ?>';
 });
 </script>
 <?php endif; ?>

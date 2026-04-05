@@ -5,6 +5,7 @@ requireGuest();
 
 $error = null;
 $success = false;
+
 if (isset($_POST['submit'])) {
     if (empty($_POST['email']) || empty($_POST['password'])) {
         $error = "One or more inputs are empty!";
@@ -13,6 +14,7 @@ if (isset($_POST['submit'])) {
         $password = $_POST['password'];
 
         $user = loginUser($email, $password);
+
         if ($user) {
             $_SESSION['id'] = (int)$user['id'];
             $_SESSION['username'] = $user['username'];
@@ -28,49 +30,19 @@ if (isset($_POST['submit'])) {
 require "../includes/header.php";
 ?>
 
-<!-- login backed -->
-<?php if ($error) : ?>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Login Failed',
-            text: <?php echo json_encode($error); ?>,
-            confirmButtonText: 'OK'
-        });
-    </script>
-<?php endif; ?>
-
-<?php if ($success) : ?>
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Login Successful',
-            text: 'Welcome back!',
-            timer: 2000,
-            showConfirmButton: false
-        }).then(() => {
-            window.location.href = '<?php echo APPURL; ?>';
-        });
-    </script>
-<?php endif; ?>
-
-
-<!-- Normal Breadcrumb Begin -->
 <section class="normal-breadcrumb set-bg" data-setbg="<?php echo APPURL; ?>/img/normal-breadcrumb.jpg">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="normal__breadcrumb__text">
                     <h2>Login</h2>
-                    <p>Welcome to the official Anime blog.</p>
+                    <p>Welcome to the official Anime blog.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- Normal Breadcrumb End -->
 
-<!-- Login Section Begin -->
 <section class="login spad">
     <div class="container">
         <div class="row">
@@ -88,17 +60,46 @@ require "../includes/header.php";
                         </div>
                         <button name="submit" type="submit" class="site-btn">Login Now</button>
                     </form>
-                    <!-- <a href="#" class="forget_pass">Forgot Your Password?</a> -->
                 </div>
             </div>
-            <div class="col-l   g-6">
+
+            <div class="col-lg-6">
                 <div class="login__register">
-                    <h3>Dont’t Have An Account?</h3>
+                    <h3>Don’t Have An Account?</h3>
                     <a href="signup.php" class="primary-btn">Register Now</a>
                 </div>
             </div>
         </div>
-
     </div>
 </section>
+
 <?php require "../includes/footer.php"; ?>
+
+<?php if ($error): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: <?php echo json_encode($error); ?>,
+        confirmButtonText: 'OK'
+    });
+});
+</script>
+<?php endif; ?>
+
+<?php if ($success): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'Welcome back!',
+        timer: 1500,
+        showConfirmButton: false
+    }).then(() => {
+        window.location.href = '<?php echo APPURL; ?>';
+    });
+});
+</script>
+<?php endif; ?>

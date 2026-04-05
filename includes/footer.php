@@ -52,13 +52,16 @@
 <script src="<?php echo APPURL ?>/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="<?php echo APPURL ?>/js/player.js"></script>
+<?php $currentPage = basename($_SERVER['PHP_SELF'] ?? ''); ?>
+<?php if ($currentPage !== 'login.php' && $currentPage !== 'signup.php'): ?>
 <script src="<?php echo APPURL ?>/js/jquery.nice-select.min.js"></script>
+<?php endif; ?>
 <script src="<?php echo APPURL ?>/js/mixitup.min.js"></script>
 <script src="<?php echo APPURL ?>/js/jquery.slicknav.js"></script>
 <script src="<?php echo APPURL ?>/js/owl.carousel.min.js"></script>
 <script src="<?php echo APPURL ?>/js/main.js"></script>
-
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" type="text/css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </body>
 
 </html>

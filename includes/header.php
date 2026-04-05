@@ -32,8 +32,6 @@ $allGenresCategories = getAllGenresCategories();
     <link rel="stylesheet" href="<?php echo APPURL ?>/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="<?php echo APPURL ?>/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="<?php echo APPURL ?>/css/style.css" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body>
