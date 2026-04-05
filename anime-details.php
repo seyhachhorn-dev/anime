@@ -12,24 +12,23 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     if (isset($_POST['submit'])) {
 
         if (getCurrentUserId() === null) {
-            header("Location: " . APPURL . "/auth/login.php");
+            header("Location: " . APPURL . "/auth/login.php?redirect=" . urlencode(APPURL . "/anime-details.php?id=" . $showid));
             exit;
         }
 
         $show_id = $_POST['show_id'];
-        $user_id = $_POST['id'];
+        $user_id = getCurrentUserId();
 
         if (!empty($show_id) && !empty($user_id)) {
             insertFollow($show_id, $user_id);
         }
-   header("Location: " . APPURL . "/anime-details.php?id=" . $showid);
-         exit;
-      
+
+        header("Location: " . APPURL . "/anime-details.php?id=" . $showid);
+        exit;
     }
 }
-
-
 ?>
+
 <?php require "includes/header.php"; ?>
 
 
@@ -39,7 +38,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__links">
-                    <a href="<?php echo APPURL; ?>"><i class="fa fa-home"></i> Home</a>
+                    <a href="<?php echo APPURL ?>"><i class="fa fa-home"></i> Home</a>
                     <a href="<?php echo APPURL ?>/anime-details.php?id=<?php echo $showDetail->id ?>">Details</a>
                     <span><?php echo $showDetail->title ?></span>
                 </div>
@@ -57,7 +56,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <?php if ($showDetail) : ?>
                     <div class="col-lg-3">
                         <div class="anime__details__pic set-bg" data-setbg="img/<?php echo $showDetail->image ?>">
-                            <!-- <div class="comment"><i class="fa fa-comments"></i> 11</div> -->
                             <div class="view"><i class="fa fa-eye"></i> <?php echo $showDetail->view_count ?></div>
                         </div>
                     </div>
@@ -93,15 +91,15 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                 <form method="POST" action="<?php echo APPURL ?>/anime-details.php?id=<?php echo $showid ?>" style="display: inline;">
                                     <input hidden type="text" name="show_id" value="<?php echo $showid ?>">
                                     <input hidden type="text" name="id" value="<?php echo getCurrentUserId() ?>">
-                                    <?php if (checkFollowed($showid)): ?>
-                                        <button  href="#" class="follow-btn" disabled><i class="fa fa-heart"></i> Followed</button>
+                                    <?php if (getCurrentUserId() !== null && checkFollowed($showid)): ?>
+                                        <button href="#" class="follow-btn" disabled><i class="fa fa-heart"></i> Followed</button>
                                     <?php else: ?>
                                         <button name="submit" type="submit" href="#" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</button>
                                     <?php endif; ?>
                                 </form>
-                                
-                                    <a href="<?php echo APPURL ?>/anime-watching.php?id=<?php echo $showid ?>&ep=1" class="watch-btn"><span>Watch Now</span> <i
-                                            class="fa fa-angle-right"></i></a>
+
+                                <a href="<?php echo APPURL ?>/anime-watching.php?id=<?php echo $showid ?>&ep=1" class="watch-btn"><span>Watch Now</span> <i
+                                        class="fa fa-angle-right"></i></a>
 
                             </div>
                         </div>
@@ -201,8 +199,19 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: 'comment=' + encodeURIComponent(commentText) + '&show_id=' + showId
         })
-        .then(response => response.json())
+        .then(async response => {
+            const data = await response.json();
+
+            if (response.status === 401) {
+                window.location.href = data.redirect || '<?php echo APPURL; ?>/auth/login.php';
+                return null;
+            }
+
+            return data;
+        })
         .then(data => {
+            if (!data) return;
+
             if (data.success) {
                 // Add new comment to the comments container
                 var newComment = `
