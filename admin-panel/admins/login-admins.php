@@ -35,11 +35,11 @@ if (isset($_POST['submit'])) {
 
 <?php if ($error): ?>
 <script>
-swal({
-    title: "Error!",
+Swal.fire({
+    icon: 'error',
+    title: 'Login Failed',
     text: <?php echo json_encode($error); ?>,
-    icon: "error",
-    button: "OK",
+    confirmButtonText: 'OK'
 });
 </script>
 <?php endif; ?>

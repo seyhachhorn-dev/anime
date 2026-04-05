@@ -4,6 +4,7 @@ require_once __DIR__ . "/../init/init.php";
 requireGuest();
 
 $error = null;
+$success = false;
 if (isset($_POST['submit'])) {
     if (empty($_POST['email']) || empty($_POST['password'])) {
         $error = "One or more inputs are empty!";
@@ -17,11 +18,10 @@ if (isset($_POST['submit'])) {
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
 
-            header("location: " . APPURL);
-            exit();
+            $success = true;
+        } else {
+            $error = "Email or password is wrong!";
         }
-
-        $error = "Email or password is wrong!";
     }
 }
 
@@ -31,7 +31,26 @@ require "../includes/header.php";
 <!-- login backed -->
 <?php if ($error) : ?>
     <script>
-        alert(<?php echo json_encode($error); ?>);
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: <?php echo json_encode($error); ?>,
+            confirmButtonText: 'OK'
+        });
+    </script>
+<?php endif; ?>
+
+<?php if ($success) : ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Login Successful',
+            text: 'Welcome back!',
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            window.location.href = '<?php echo APPURL; ?>';
+        });
     </script>
 <?php endif; ?>
 

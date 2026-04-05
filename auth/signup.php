@@ -4,6 +4,7 @@ require_once __DIR__ . "/../init/init.php";
 requireGuest();
 
 $error = null;
+$success = false;
 if (isset($_POST['submit'])) {
     if (empty($_POST['email']) || empty($_POST['username']) || empty($_POST['password'])) {
         $error = "one or no more input are empty!";
@@ -14,11 +15,10 @@ if (isset($_POST['submit'])) {
 
         $created = createUser($email, $username, $passwordHash);
         if ($created) {
-            header("location: login.php");
-            exit();
+            $success = true;
+        } else {
+            $error = "Could not create user. Please try again.";
         }
-
-        $error = "Could not create user. Please try again.";
     }
 }
 
@@ -28,7 +28,26 @@ require "../includes/header.php";
 <!-- login backend -->
 <?php if ($error) : ?>
     <script>
-        alert(<?php echo json_encode($error); ?>);
+        Swal.fire({
+            icon: 'error',
+            title: 'Sign Up Failed',
+            text: <?php echo json_encode($error); ?>,
+            confirmButtonText: 'OK'
+        });
+    </script>
+<?php endif; ?>
+
+<?php if ($success) : ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Sign Up Successful',
+            text: 'Account created! Redirecting to login...',
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            window.location.href = 'login.php';
+        });
     </script>
 <?php endif; ?>
 
